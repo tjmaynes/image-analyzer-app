@@ -4,7 +4,9 @@ import React, {
   DragEvent,
   ChangeEvent,
   useEffect,
+  useMemo,
 } from 'react'
+import { ImageMetadata, ImageProcessingResults } from '../types'
 import { ErrorContainer } from './ErrorContainer'
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i
@@ -14,7 +16,7 @@ enum ImageUploaderError {
 }
 
 export type ImageUploaderProps = {
-  onUpload: (files: Blob[]) => void
+  onUpload: (images: ImageMetadata[]) => void
 }
 
 export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
@@ -22,20 +24,26 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const [uploadError, setUploadError] = useState<ImageUploaderError | null>(
     null
   )
-  const [rawImageFiles, setRawImageFiles] = useState<Blob[] | null>(null)
+  const [rawImageFiles, setRawImageFiles] = useState<FileList | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
+  const readImages: Worker = useMemo(
+    () =>
+      new Worker(new URL('./workers/image-reader.ts', import.meta.url), {
+        type: 'module',
+      }),
+    []
+  )
+
   const handleFiles = (rawImageFiles: FileList) => {
-    const files: Blob[] = []
     for (let i = 0; i < rawImageFiles.length; i++) {
       if (!rawImageFiles[i].type.match(imageMimeType)) {
         setUploadError(ImageUploaderError.InvalidFileType)
         return
       }
-      files.push(rawImageFiles[i])
     }
 
-    setRawImageFiles(files)
+    setRawImageFiles(rawImageFiles)
   }
 
   const handleDrag = (
@@ -71,8 +79,17 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   }
 
   useEffect(() => {
-    if (rawImageFiles) onUpload(rawImageFiles)
+    if (window.Worker && rawImageFiles && rawImageFiles.length > 0)
+      readImages.postMessage(rawImageFiles)
   }, [rawImageFiles])
+
+  useEffect(() => {
+    if (window.Worker) {
+      readImages.onmessage = (e: MessageEvent<ImageProcessingResults>) => {
+        onUpload(e.data.data)
+      }
+    }
+  }, [readImages])
 
   return (
     <form

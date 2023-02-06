@@ -1,26 +1,16 @@
 import React, { useCallback, useReducer } from 'react'
-import { MobileNet } from '@tensorflow-models/mobilenet'
 import { BeatLoader } from 'react-spinners'
-import { Result } from 'ts-results'
+import { useClientContext } from '../ClientContext'
 import {
   MemoizedImageDetails,
   ImageUploader,
   ErrorContainer,
 } from '../components'
-import { ImageClassificationData } from '../types'
+import { ImageClassificationData, ImageMetadata } from '../types'
 
-type ImageAnalyzerProps = {
-  imageClassifier: (
-    imageFile: Blob,
-    model: MobileNet
-  ) => Promise<Result<ImageClassificationData, Error>>
-  model: MobileNet
-}
+export const ImageAnalyzer = () => {
+  const { imageAnalyzerClient } = useClientContext()
 
-export const ImageAnalyzer = ({
-  imageClassifier,
-  model,
-}: ImageAnalyzerProps) => {
   const [{ imageQueue, data, errors }, dispatch] = useReducer(reducer, {
     imageQueue: [],
     data: [],
@@ -28,34 +18,38 @@ export const ImageAnalyzer = ({
   })
 
   const processFiles = useCallback(
-    (files: Blob[]) => {
-      if (model) {
-        dispatch({
-          type: Action.ProcessingFiles,
-          images: files,
-        })
+    (images: ImageMetadata[]) => {
+      dispatch({
+        type: Action.ProcessingFiles,
+        images: images,
+      })
 
-        files.forEach((file) => {
-          imageClassifier(file, model)
-            .then((result) => {
-              if (result.ok) {
-                dispatch({
-                  type: Action.ProcessedImage,
-                  data: result.val,
-                })
-              }
-            })
-            .catch((error) => {
+      images.forEach((file) => {
+        imageAnalyzerClient
+          .analyze(file)
+          .then((result) => {
+            if (result.ok)
+              dispatch({
+                type: Action.ClassifiedImage,
+                data: result.val,
+              })
+            else
               dispatch({
                 type: Action.FailedProcessingImage,
                 id: file.name,
-                error: error,
+                error: result.val,
               })
+          })
+          .catch((e) => {
+            dispatch({
+              type: Action.FailedProcessingImage,
+              id: file.name,
+              error: e,
             })
-        })
-      }
+          })
+      })
     },
-    [data, imageQueue, errors, model]
+    [data, imageQueue, errors]
   )
 
   return (
@@ -99,14 +93,14 @@ export const ImageAnalyzer = ({
 
 enum Action {
   ProcessingFiles = 'Processing files',
-  ProcessedImage = 'Processed image',
+  ClassifiedImage = 'Classified image',
   FailedProcessingImage = 'Failed processing image',
 }
 
 type AppAction =
-  | { type: Action.ProcessingFiles; images: Blob[] }
+  | { type: Action.ProcessingFiles; images: ImageMetadata[] }
   | {
-      type: Action.ProcessedImage
+      type: Action.ClassifiedImage
       data: ImageClassificationData
     }
   | {
@@ -116,7 +110,7 @@ type AppAction =
     }
 
 type AppState = {
-  imageQueue: Blob[]
+  imageQueue: ImageMetadata[]
   data: ImageClassificationData[]
   errors: Error[]
 }
@@ -128,7 +122,7 @@ const reducer = (state: AppState, action: AppAction): AppState => {
         ...state,
         imageQueue: action.images,
       }
-    case Action.ProcessedImage:
+    case Action.ClassifiedImage:
       return {
         ...state,
         imageQueue: state.imageQueue.filter(

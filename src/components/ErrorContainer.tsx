@@ -7,8 +7,8 @@ export const ErrorContainer = ({ errors }: { errors: string[] }) => (
       <div>
         <h3>Failed for the following reasons:</h3>
         <ul>
-          {errors.map((errorMessage) => (
-            <li>{errorMessage}</li>
+          {errors.map((errorMessage, index) => (
+            <li key={index}>{errorMessage}</li>
           ))}
         </ul>
       </div>

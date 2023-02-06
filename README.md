@@ -1,6 +1,6 @@
 # image-analyzer-web
 
-> a web app for analyzing images using MobileNet and ChatGPT.
+> a web app for analyzing images using MobileNet and ChatGPT
 
 ## Requirements
 
