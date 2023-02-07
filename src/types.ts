@@ -6,12 +6,13 @@ export type ImageProcessingResults = { data: ImageMetadata[]; errors: Error[] }
 export type ImageMetadata = {
   name: string
   imageData: ImageData
-  imageURL: string
 }
+
+export type Prediction = { className: string; probability: number }
 
 export type ClassificationData = {
   name: string
-  predictions: { className: string; probability: number }[]
+  predictions: Prediction[]
 }
 
 export type ImageClassificationData = ImageMetadata &
@@ -19,14 +20,10 @@ export type ImageClassificationData = ImageMetadata &
     description: string
   }
 
-export type ImageClassifier = (
-  imageFile: Blob,
-  model: MobileNet
-) => Promise<Result<ImageClassificationData, Error>>
-
 export interface IImageClassifierClient {
   classify(
-    imageMetadata: ImageMetadata
+    imageMetadata: ImageMetadata,
+    model: MobileNet
   ): Promise<Result<ClassificationData, Error>>
 }
 
@@ -35,5 +32,8 @@ export interface IApiClient {
 }
 
 export interface IImageAnalyzerClient {
-  analyze(image: ImageMetadata): Promise<Result<ImageClassificationData, Error>>
+  analyze(
+    image: ImageMetadata,
+    model: MobileNet
+  ): Promise<Result<ImageClassificationData, Error>>
 }

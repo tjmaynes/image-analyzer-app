@@ -9,19 +9,11 @@ import {
 } from '../types'
 
 export class MobileNetImageClassifierClient implements IImageClassifierClient {
-  private model: mobilenet.MobileNet | null
-
-  constructor() {
-    this.model = null
-  }
-
-  classify = async ({
-    name,
-    imageData,
-  }: ImageMetadata): Promise<Result<ClassificationData, Error>> => {
-    if (!this.model) this.model = await mobilenet.load()
-
-    return this.model
+  classify = async (
+    { name, imageData }: ImageMetadata,
+    model: mobilenet.MobileNet
+  ): Promise<Result<ClassificationData, Error>> =>
+    model
       .classify(imageData)
       .then((predictions) =>
         Ok({
@@ -32,5 +24,4 @@ export class MobileNetImageClassifierClient implements IImageClassifierClient {
         })
       )
       .catch((e) => Err(e))
-  }
 }

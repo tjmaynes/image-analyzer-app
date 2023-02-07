@@ -3,10 +3,8 @@ import React, {
   useRef,
   DragEvent,
   ChangeEvent,
-  useEffect,
-  useMemo,
+  useCallback,
 } from 'react'
-import { ImageMetadata, ImageProcessingResults } from '../types'
 import { ErrorContainer } from './ErrorContainer'
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i
@@ -16,7 +14,7 @@ enum ImageUploaderError {
 }
 
 export type ImageUploaderProps = {
-  onUpload: (images: ImageMetadata[]) => void
+  onUpload: (images: Blob[]) => void
 }
 
 export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
@@ -24,27 +22,20 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const [uploadError, setUploadError] = useState<ImageUploaderError | null>(
     null
   )
-  const [rawImageFiles, setRawImageFiles] = useState<FileList | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const readImages: Worker = useMemo(
-    () =>
-      new Worker(new URL('./workers/image-reader.ts', import.meta.url), {
-        type: 'module',
-      }),
-    []
-  )
-
-  const handleFiles = (rawImageFiles: FileList) => {
+  const handleFiles = useCallback((rawImageFiles: FileList) => {
+    const blobs: Blob[] = []
     for (let i = 0; i < rawImageFiles.length; i++) {
       if (!rawImageFiles[i].type.match(imageMimeType)) {
         setUploadError(ImageUploaderError.InvalidFileType)
         return
       }
+      blobs.push(rawImageFiles[i])
     }
 
-    setRawImageFiles(rawImageFiles)
-  }
+    onUpload(blobs)
+  }, [])
 
   const handleDrag = (
     e: DragEvent<HTMLDivElement> | DragEvent<HTMLFormElement>
@@ -77,19 +68,6 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const onButtonClick = () => {
     inputRef.current?.click()
   }
-
-  useEffect(() => {
-    if (window.Worker && rawImageFiles && rawImageFiles.length > 0)
-      readImages.postMessage(rawImageFiles)
-  }, [rawImageFiles])
-
-  useEffect(() => {
-    if (window.Worker) {
-      readImages.onmessage = (e: MessageEvent<ImageProcessingResults>) => {
-        onUpload(e.data.data)
-      }
-    }
-  }, [readImages])
 
   return (
     <form

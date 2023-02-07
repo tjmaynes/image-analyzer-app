@@ -1,145 +1,129 @@
-import React, { useCallback, useReducer } from 'react'
-import { BeatLoader } from 'react-spinners'
+import { MobileNet } from '@tensorflow-models/mobilenet'
+import React, { useReducer, useCallback } from 'react'
+import { memo } from 'react'
 import { useClientContext } from '../ClientContext'
-import {
-  MemoizedImageDetails,
-  ImageUploader,
-  ErrorContainer,
-} from '../components'
 import { ImageClassificationData, ImageMetadata } from '../types'
+import { ImageCanvas } from './ImageCanvas'
 
-export const ImageAnalyzer = () => {
+type ImageAnalyzerProps = { imageFile: Blob; model: MobileNet }
+
+const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
   const { imageAnalyzerClient } = useClientContext()
 
-  const [{ imageQueue, data, errors }, dispatch] = useReducer(reducer, {
-    imageQueue: [],
-    data: [],
-    errors: [],
+  const [{ isLoadingImage, data, error }, dispatch] = useReducer(reducer, {
+    isLoadingImage: true,
+    data: null,
+    error: null,
   })
 
-  const processFiles = useCallback(
-    (images: ImageMetadata[]) => {
-      dispatch({
-        type: Action.ProcessingFiles,
-        images: images,
-      })
-
-      images.forEach((file) => {
-        imageAnalyzerClient
-          .analyze(file)
-          .then((result) => {
-            if (result.ok)
-              dispatch({
-                type: Action.ClassifiedImage,
-                data: result.val,
-              })
-            else
-              dispatch({
-                type: Action.FailedProcessingImage,
-                id: file.name,
-                error: result.val,
-              })
-          })
-          .catch((e) => {
+  const handleImageCanvasRender = useCallback(
+    (imageData: ImageData) => {
+      imageAnalyzerClient
+        .analyze({ name: imageFile.name, imageData }, model)
+        .then((result) => {
+          if (result.ok)
+            dispatch({
+              type: Action.ClassifiedImage,
+              data: result.val,
+            })
+          else
             dispatch({
               type: Action.FailedProcessingImage,
-              id: file.name,
-              error: e,
+              error: result.val,
             })
+        })
+        .catch((e) => {
+          dispatch({
+            type: Action.FailedProcessingImage,
+            error: e,
           })
-      })
+        })
     },
-    [data, imageQueue, errors]
+    [imageFile, imageAnalyzerClient]
   )
 
   return (
-    <div className="container">
-      {data.length <= 0 && errors.length <= 0 && imageQueue.length <= 0 && (
-        <ImageUploader onUpload={processFiles} />
-      )}
-      {imageQueue.length > 0 && (
+    <div>
+      <ImageCanvas imageFile={imageFile} onRender={handleImageCanvasRender} />
+      {!isLoadingImage && !error && data && (
         <>
-          {imageQueue.map(({ name }, index) => {
-            return (
-              <div key={index}>
-                <h1 className="processing-message">
-                  Processing image: '{name}'
-                </h1>
-                <BeatLoader
-                  color="#189a92"
-                  loading={imageQueue.length > 0}
-                  size={20}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              </div>
-            )
-          })}
-        </>
-      )}
-      {data.length > 0 && errors.length <= 0 && (
-        <>
-          {data.map((data, index) => (
-            <MemoizedImageDetails key={index} {...data} />
+          {data.predictions.map(({ className, probability }, index) => (
+            <li key={index}>
+              {prettyPrintClassName(className)}:{' '}
+              {prettyPrintPercentage(probability)}
+            </li>
           ))}
+          <p>{data.description}</p>
         </>
-      )}
-      {errors.length > 0 && (
-        <ErrorContainer errors={errors.map((error) => error.message)} />
       )}
     </div>
   )
 }
 
+export const MemoizedImageAnalyzer = memo((props: ImageAnalyzerProps) => (
+  <ImageAnalyzer {...props} />
+))
+
 enum Action {
-  ProcessingFiles = 'Processing files',
+  ProcessingImage = 'Processing image',
   ClassifiedImage = 'Classified image',
   FailedProcessingImage = 'Failed processing image',
 }
 
-type AppAction =
-  | { type: Action.ProcessingFiles; images: ImageMetadata[] }
+type AnalyzerAction =
+  | { type: Action.ProcessingImage; image: ImageMetadata }
   | {
       type: Action.ClassifiedImage
       data: ImageClassificationData
     }
   | {
       type: Action.FailedProcessingImage
-      id: string
       error: Error
     }
 
-type AppState = {
-  imageQueue: ImageMetadata[]
-  data: ImageClassificationData[]
-  errors: Error[]
+type AnalyzerState = {
+  isLoadingImage: boolean
+  data: ImageClassificationData | null
+  error: Error | null
 }
 
-const reducer = (state: AppState, action: AppAction): AppState => {
+const reducer = (
+  state: AnalyzerState,
+  action: AnalyzerAction
+): AnalyzerState => {
   switch (action.type) {
-    case Action.ProcessingFiles:
+    case Action.ProcessingImage:
       return {
         ...state,
-        imageQueue: action.images,
+        isLoadingImage: true,
       }
     case Action.ClassifiedImage:
       return {
         ...state,
-        imageQueue: state.imageQueue.filter(
-          (image) => image.name !== action.data.name
-        ),
-        data: [...state.data, action.data],
-        errors: state.errors,
+        isLoadingImage: false,
+        data: action.data,
       }
     case Action.FailedProcessingImage:
       return {
         ...state,
-        imageQueue: state.imageQueue.filter(
-          (image) => image.name !== action.id
-        ),
-        errors: [...state.errors, action.error],
+        isLoadingImage: false,
+        error: action.error,
       }
     default:
       return state
   }
 }
+
+const prettyPrintClassName = (className: string) =>
+  className
+    .split(' ')
+    .map((word) => capitalizeWord(word))
+    .join(' ')
+
+const capitalizeWord = (word: string): string => {
+  if (word.length <= 2) return word
+  return `${word[0].toUpperCase()}${word.substring(1)}`
+}
+
+const prettyPrintPercentage = (probability: number) =>
+  `${(probability * 100).toFixed(0)}%`
