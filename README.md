@@ -1,6 +1,6 @@
-# image-analyzer-web
+# Image Analyzer App
 
-> a web app for analyzing images using MobileNet and ChatGPT
+> a Cloudflare Pages web app for analyzing images using MobileNet (in-browser) and ChatGPT (Cloudflare Workers)
 
 ## Requirements
 
@@ -10,32 +10,6 @@
 
 ## Usage
 
-To install project dependencies, run the following command:
+To run the `web` app, check out these [instructions](./web/README.md).
 
-```bash
-make install
-```
-
-To run all tests, run the following command:
-
-```bash
-make test
-```
-
-To start the application, run the following command:
-
-```bash
-make start
-```
-
-To work on the application, run the following command:
-
-```bash
-make dev
-```
-
-To deploy the application, run the following command:
-
-```bash
-make deploy
-```
+To run the `api` server, check out these [instructions](./api/README.md).

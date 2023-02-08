@@ -1,0 +1,17 @@
+{
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "globals": {
+    "OPENAI_API_KEY": "readonly",
+    "IMAGE_ANALYZER_DB": "readonly",
+    "IMAGE_ANALYZER_API_ORIGINS": "readonly"
+  },
+  "ignorePatterns": ["node_modules"]
+}
