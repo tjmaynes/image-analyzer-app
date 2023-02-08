@@ -1,9 +1,12 @@
 import React, { useReducer, useEffect, useCallback } from 'react'
 import * as mobilenet from '@tensorflow-models/mobilenet'
-import { ImageUploader, MemoizedImageAnalyzer } from './components'
-import './App.css'
 import { BeatLoader } from 'react-spinners'
-
+import {
+  GitHubRibbonLink,
+  ImageUploader,
+  MemoizedImageAnalyzer,
+} from './components'
+import './App.css'
 const loadModel = async () => await mobilenet.load()
 
 const App = () => {
@@ -32,30 +35,37 @@ const App = () => {
   )
 
   return (
-    <div className="container">
-      {isLoadingModel && (
-        <div>
-          <h1 className="processing-message">Loading model...</h1>
-          <BeatLoader
-            color="#189a92"
-            loading={isLoadingModel}
-            size={20}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
-        </div>
-      )}
-      {!isLoadingModel && images.length <= 0 && (
-        <ImageUploader onUpload={processFiles} />
-      )}
-      {model && images.length > 0 && (
-        <>
-          {images.map((data, index) => (
-            <MemoizedImageAnalyzer key={index} imageFile={data} model={model} />
-          ))}
-        </>
-      )}
-    </div>
+    <>
+      <GitHubRibbonLink project="tjmaynes/image-analyzer-app" />
+      <div className="container">
+        {isLoadingModel && (
+          <div>
+            <h1 className="processing-message">Loading model...</h1>
+            <BeatLoader
+              color="#189a92"
+              loading={isLoadingModel}
+              size={20}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
+        )}
+        {!isLoadingModel && images.length <= 0 && (
+          <ImageUploader onUpload={processFiles} />
+        )}
+        {model && images.length > 0 && (
+          <>
+            {images.map((data, index) => (
+              <MemoizedImageAnalyzer
+                key={index}
+                imageFile={data}
+                model={model}
+              />
+            ))}
+          </>
+        )}
+      </div>
+    </>
   )
 }
 

@@ -25,14 +25,18 @@ const getDescriptionForPrompt = async (context, prompt) => {
   return text
 }
 
+const origins = IMAGE_ANALYZER_API_ORIGINS.split(', ')
+
 const { preflight, corsify } = createCors({
   methods: ['POST'],
-  origins: IMAGE_ANALYZER_API_ORIGINS.split(', '),
+  origins: origins,
   maxAge: 3600,
   headers: {
     'Access-Control-Allow-Origin': '*',
   },
 })
+
+console.log(origins)
 
 const router = Router()
 

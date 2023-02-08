@@ -1,3 +1,5 @@
 export * from './ImageUploader'
 export * from './ErrorContainer'
 export * from './ImageAnalyzer'
+export * from './GitHubRibbonLink'
+export * from './ImageCanvas'
