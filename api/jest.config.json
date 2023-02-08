@@ -1,5 +1,10 @@
 {
-  "testEnvironment": "node",
-  "collectCoverageFrom": ["client/**/*.js"],
-  "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+  "testEnvironment": "miniflare",
+  "testMatch": [
+    "**/test/**/*.+(ts|tsx)",
+    "**/src/**/(*.)+(spec|test).+(ts|tsx)"
+  ],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "esbuild-jest"
+  }
 }
