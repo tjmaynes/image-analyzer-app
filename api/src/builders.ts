@@ -14,11 +14,12 @@ export const appDependenciesBuilder = (
   keyvalueStore: KVNamespace,
   openAIApiKey: string
 ): AppDependencies => {
-  const cacheClient = new CacheClient(keyvalueStore)
   const configuration = new Configuration({ apiKey: openAIApiKey })
   const openai = new OpenAIApi(configuration)
-  const conversationClient = new OpenAIConversationClient(openai, cacheClient)
-  return { conversationClient }
+  const cacheClient = new CacheClient(keyvalueStore)
+  return {
+    conversationClient: new OpenAIConversationClient(openai, cacheClient),
+  }
 }
 
 export const appBuilder = (
@@ -28,14 +29,19 @@ export const appBuilder = (
 
   app.use('*', middlewareBuilder(dependenciesBuilder))
 
+  app.options('*', (c) => c.text('', 204))
+
   app.post('/conversation', async (c) => {
-    const { context } = await c.req.json<ConversationRequestBody>()
+    const body = await c.req.json<ConversationRequestBody>()
+    if (!body['context'])
+      return new Response('Unprocessable Entity', { status: 422 })
+
     const handleConversation = handleConversationBuilder(
       c.get('conversationClient')
     )
 
-    const result = await handleConversation(context)
-    return c.json({ description: result })
+    const result = await handleConversation(body.context)
+    return c.json({ description: result }, 201)
   })
 
   return app
@@ -43,24 +49,25 @@ export const appBuilder = (
 
 export const middlewareBuilder =
   (dependenciesBuilder: AppDependenciesBuilder) =>
-  async (c: Context, next: Next): Promise<void> => {
+  async (cxt: Context, next: Next): Promise<void | Response> => {
     const { conversationClient } = dependenciesBuilder(
-      c.env.IMAGE_ANALYZER_DB,
-      c.env.OPENAI_API_KEY
+      cxt.env.IMAGE_ANALYZER_DB,
+      cxt.env.OPENAI_API_KEY
     )
 
-    c.set('conversationClient', conversationClient)
+    cxt.set('conversationClient', conversationClient)
 
-    cors({
-      origin: c.env.ORIGINS.split(',').filter(
-        (origin: string) => origin.length > 0
-      ),
-      allowHeaders: ['X-Custom-Header', 'Upgrade-Insecure-Requests'],
+    const origin = cxt.env.ORIGINS.split(',').filter(
+      (origin: string) => origin.length > 0
+    )
+
+    const handler = cors({
+      origin: origin,
+      allowHeaders: ['Content-Type', 'Authorization'],
       allowMethods: ['POST', 'GET', 'OPTIONS'],
-      exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+      exposeHeaders: ['Content-Length'],
       maxAge: 600,
-      credentials: true,
     })
 
-    return await next()
+    return handler(cxt, next)
   }

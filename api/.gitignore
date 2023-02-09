@@ -22,6 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.idea/
+.fleet/
 
 # Cloudflare
 .*.vars

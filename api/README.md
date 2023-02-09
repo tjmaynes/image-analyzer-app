@@ -39,3 +39,14 @@ To deploy the application, run the following command:
 ```bash
 make deploy
 ```
+
+## Notes
+
+To test `POST /conversation`, run the following command:
+
+```bash
+curl -v \
+    -H 'Content-Type: application/json' \
+    -d '{"context":"some-context"}' \
+    http://localhost:8081/conversation
+```

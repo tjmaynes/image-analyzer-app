@@ -13,7 +13,7 @@ export type Clients = {
 export const createClientContext = () => ({
   imageAnalyzerClient: new ImageAnalyzerClient(
     new MobileNetImageClassifierClient(),
-    new ApiClient(import.meta.env.VITE_API_HOST || '')
+    new ApiClient(import.meta.env.VITE_API_HOST || 'http://localhost:8081')
   ),
 })
 

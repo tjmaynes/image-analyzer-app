@@ -7,6 +7,7 @@ import {
   MemoizedImageAnalyzer,
 } from './components'
 import './App.css'
+
 const loadModel = async () => await mobilenet.load()
 
 const App = () => {

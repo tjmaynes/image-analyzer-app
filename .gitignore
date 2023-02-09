@@ -1,0 +1,7 @@
+# Macos
+.DS_Stuff
+
+# Editors
+.vscode/
+.idea/
+.fleet/

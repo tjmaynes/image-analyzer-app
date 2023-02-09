@@ -1,10 +1,5 @@
 {
+  "preset": "ts-jest",
   "testEnvironment": "miniflare",
-  "testMatch": [
-    "**/test/**/*.+(ts|tsx)",
-    "**/src/**/(*.)+(spec|test).+(ts|tsx)"
-  ],
-  "transform": {
-    "^.+\\.(ts|tsx)$": "esbuild-jest"
-  }
+  "testMatch": ["**/src/**/(*.)+(spec|test).+(ts|tsx)"]
 }

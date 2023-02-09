@@ -4,7 +4,9 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["esnext"],
-    "types": ["@cloudflare/workers-types"],
-    "moduleResolution": "node"
+    "types": ["@cloudflare/workers-types", "jest"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
