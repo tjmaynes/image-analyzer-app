@@ -27,8 +27,12 @@ export interface IImageClassifierClient {
   ): Promise<Result<ClassificationData, Error>>
 }
 
+export type DescribeApiResponse = {
+  data: { describe: { description: string } }
+}
+
 export interface IApiClient {
-  infer(context: string): Promise<Option<{ description: string }>>
+  describe(thing: string): Promise<Option<DescribeApiResponse>>
 }
 
 export interface IImageAnalyzerClient {

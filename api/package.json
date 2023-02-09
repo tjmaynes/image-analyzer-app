@@ -34,6 +34,7 @@
     "wrangler": "^2.1.14"
   },
   "dependencies": {
+    "@hono/graphql-server": "^0.2.0",
     "hono": "^2.7.6",
     "openai-edge": "^0.2.2"
   }

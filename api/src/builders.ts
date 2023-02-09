@@ -1,14 +1,11 @@
 import { Hono, Context, Next } from 'hono'
 import { cors } from 'hono/cors'
+import { graphqlServer } from '@hono/graphql-server'
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { Bindings } from './bindings'
 import { CacheClient, OpenAIConversationClient } from './clients'
-import { handleConversationBuilder } from './handlers'
-import {
-  AppDependencies,
-  AppDependenciesBuilder,
-  ConversationRequestBody,
-} from './types'
+import { rootResolver, schema } from './handlers'
+import { AppDependencies, AppDependenciesBuilder } from './types'
 
 export const appDependenciesBuilder = (
   keyvalueStore: KVNamespace,
@@ -31,18 +28,13 @@ export const appBuilder = (
 
   app.options('*', (c) => c.text('', 204))
 
-  app.post('/conversation', async (c) => {
-    const body = await c.req.json<ConversationRequestBody>()
-    if (!body['context'])
-      return new Response('Unprocessable Entity', { status: 422 })
-
-    const handleConversation = handleConversationBuilder(
-      c.get('conversationClient')
-    )
-
-    const result = await handleConversation(body.context)
-    return c.json({ description: result }, 201)
-  })
+  app.use(
+    '/graphql',
+    graphqlServer({
+      schema,
+      rootResolver,
+    })
+  )
 
   return app
 }

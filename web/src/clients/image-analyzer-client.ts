@@ -29,14 +29,14 @@ export class ImageAnalyzerClient implements IImageAnalyzerClient {
       model
     )
     if (classificationData.ok) {
-      const inferrence = await this.apiClient.infer(
+      const describeOption = await this.apiClient.describe(
         classificationData.val.predictions[0].className
       )
-      if (inferrence.some) {
+      if (describeOption.some) {
         return Ok({
           ...image,
           ...classificationData.val,
-          ...inferrence.val,
+          ...describeOption.val.data.describe,
         })
       } else {
         return Err(new Error(`Couldn't infer image: ${image.name}`))
