@@ -4,9 +4,13 @@ body {
   background-color: #f3f4f7;
 }
 
+.github-ribbon {
+  position: fixed;
+}
+
 .container {
   display: flex;
-  margin-top: 50px;
+  padding-top: 150px;
   min-height: 100vh;
   flex-direction: column;
   align-items: center;
@@ -77,4 +81,34 @@ body {
 
 .error-container {
   color: red;
+}
+
+.image-analysis-container {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  height: 100%;
+  max-width: 500px;
+  margin: 30px;
+}
+
+.image-analysis-container:first-child {
+  margin-top: 0px;
+}
+
+.image-analysis-image-container {
+  padding: 10px;
+  background: #eee;
+  box-shadow: 0 8px 8px -4px lightblue;
+  margin-bottom: 20px;
+}
+
+.image-analysis-metadata {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
+}
+
+.predictions li:first-child {
+  font-weight: 800;
 }

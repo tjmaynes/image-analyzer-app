@@ -4,6 +4,7 @@ import { memo } from 'react'
 import { useClientContext } from '../ClientContext'
 import { ImageClassificationData, ImageMetadata } from '../types'
 import { ImageCanvas } from './ImageCanvas'
+import { ImageAnalysisContainer } from './ImageAnalysisContainer'
 
 type ImageAnalyzerProps = { imageFile: Blob; model: MobileNet }
 
@@ -17,9 +18,9 @@ const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
   })
 
   const handleImageCanvasRender = useCallback(
-    (imageData: ImageData) => {
+    (data: ImageMetadata) => {
       imageAnalyzerClient
-        .analyze({ name: imageFile.name, imageData }, model)
+        .analyze(data, model)
         .then((result) => {
           if (result.ok)
             dispatch({
@@ -43,20 +44,12 @@ const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
   )
 
   return (
-    <div>
-      <ImageCanvas imageFile={imageFile} onRender={handleImageCanvasRender} />
+    <>
       {!isLoadingImage && !error && data && (
-        <>
-          {data.predictions.map(({ className, probability }, index) => (
-            <li key={index}>
-              {prettyPrintClassName(className)}:{' '}
-              {prettyPrintPercentage(probability)}
-            </li>
-          ))}
-          <p>{data.description}</p>
-        </>
+        <ImageAnalysisContainer data={data} />
       )}
-    </div>
+      <ImageCanvas imageFile={imageFile} onRender={handleImageCanvasRender} />
+    </>
   )
 }
 
@@ -113,17 +106,3 @@ const reducer = (
       return state
   }
 }
-
-const prettyPrintClassName = (className: string) =>
-  className
-    .split(' ')
-    .map((word) => capitalizeWord(word))
-    .join(' ')
-
-const capitalizeWord = (word: string): string => {
-  if (word.length <= 2) return word
-  return `${word[0].toUpperCase()}${word.substring(1)}`
-}
-
-const prettyPrintPercentage = (probability: number) =>
-  `${(probability * 100).toFixed(0)}%`

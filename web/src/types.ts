@@ -6,6 +6,8 @@ export type ImageProcessingResults = { data: ImageMetadata[]; errors: Error[] }
 export type ImageMetadata = {
   name: string
   imageData: ImageData
+  imageURL: string
+  imageDimensions: { width: number; height: number }
 }
 
 export type Prediction = { className: string; probability: number }

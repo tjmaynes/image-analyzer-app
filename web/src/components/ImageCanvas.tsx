@@ -1,20 +1,32 @@
 import React, { useReducer, useEffect, useRef } from 'react'
 import { BeatLoader } from 'react-spinners'
+import { ImageMetadata } from '../types'
 
 type ImageCanvasProps = {
   imageFile: Blob
-  onRender: (data: ImageData) => void
+  onRender: (data: ImageMetadata) => void
 }
 
 export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [{ isLoadingImage, imageBitmap, imageData, imageURL }, dispatch] =
-    useReducer(reducer, {
-      isLoadingImage: true,
-      imageData: null,
-      imageBitmap: null,
-      imageURL: null,
-    })
+  const [
+    {
+      isLoadingImage,
+      imageBitmap,
+      imageData,
+      imageURL,
+      imageHeight,
+      imageWidth,
+    },
+    dispatch,
+  ] = useReducer(reducer, {
+    isLoadingImage: true,
+    imageData: null,
+    imageBitmap: null,
+    imageURL: null,
+    imageWidth: 0,
+    imageHeight: 0,
+  })
 
   useEffect(() => {
     createImageBitmap(imageFile).then((imageBitmap) => {
@@ -37,24 +49,36 @@ export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
 
     if (!context) return
 
-    context.drawImage(imageBitmap, 0, 0, imageBitmap.width, imageBitmap.height)
-    const imageData = context.getImageData(
-      0,
-      0,
-      imageBitmap.width,
-      imageBitmap.height
-    )
+    const { width, height } = resize(imageBitmap.width, imageBitmap.height)
+
+    context.canvas.width = width
+    context.canvas.height = height
+
+    context.drawImage(imageBitmap, 0, 0, width, height)
+
+    const imageData = context.getImageData(0, 0, width, height)
 
     dispatch({
       type: Action.FinishedRenderingImage,
       imageData: imageData,
       imageURL: canvas.toDataURL(),
+      imageWidth: width,
+      imageHeight: height,
     })
   }, [imageBitmap, canvasRef])
 
   useEffect(() => {
-    if (imageData) onRender(imageData)
-  }, [imageData])
+    if (imageData && imageURL)
+      onRender({
+        name: imageFile.name,
+        imageData: imageData,
+        imageURL: imageURL,
+        imageDimensions: {
+          width: imageWidth,
+          height: imageHeight,
+        },
+      })
+  }, [imageData, imageURL])
 
   return (
     <>
@@ -67,17 +91,14 @@ export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
           data-testid="loader"
         />
       )}
-      {!isLoadingImage && imageURL && imageBitmap && (
-        <img src={imageURL} width={300} />
-      )}
-      {
+      {!isLoadingImage && (
         <canvas
-          hidden={imageBitmap !== null}
           ref={canvasRef}
-          width={imageBitmap?.width || 0}
-          height={imageBitmap?.height || 0}
+          hidden={imageBitmap !== null}
+          width={imageWidth}
+          height={imageHeight}
         />
-      }
+      )}
     </>
   )
 }
@@ -95,6 +116,8 @@ type ImageRenderAction =
       type: Action.FinishedRenderingImage
       imageData: ImageData
       imageURL: string
+      imageWidth: number
+      imageHeight: number
     }
 
 type ImageRenderState = {
@@ -102,6 +125,8 @@ type ImageRenderState = {
   imageBitmap: ImageBitmap | null
   imageData: ImageData | null
   imageURL: string | null
+  imageWidth: number
+  imageHeight: number
 }
 
 const reducer = (
@@ -126,8 +151,32 @@ const reducer = (
         isLoadingImage: false,
         imageData: action.imageData,
         imageURL: action.imageURL,
+        imageWidth: action.imageWidth,
+        imageHeight: action.imageHeight,
       }
     default:
       return state
   }
+}
+
+const resize = (
+  width: number,
+  height: number
+): { width: number; height: number } => {
+  const MAX_WIDTH = 500
+  const MAX_HEIGHT = 500
+
+  if (width > height) {
+    if (width > MAX_WIDTH) {
+      height = height * (MAX_WIDTH / width)
+      width = MAX_WIDTH
+    }
+  } else {
+    if (height > MAX_HEIGHT) {
+      width = width * (MAX_HEIGHT / height)
+      height = MAX_HEIGHT
+    }
+  }
+
+  return { width, height }
 }

@@ -89,7 +89,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
         className={dragActive ? 'drag-active' : ''}
       >
         <div>
-          <p>Drag a Photo Here to Upload</p>
+          <p>Drag a Photo Here to Analyze</p>
           <p>
             or{' '}
             <button className="upload-button" onClick={onButtonClick}>
