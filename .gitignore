@@ -5,3 +5,6 @@
 .vscode/
 .idea/
 .fleet/
+
+# Node
+node_modules/

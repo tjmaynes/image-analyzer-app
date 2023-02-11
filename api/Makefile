@@ -1,6 +1,3 @@
-install:
-	yarn $@
-
 start:
 	yarn $@
 
@@ -19,7 +16,7 @@ fix:
 logs:
 	yarn $@
 
-deploy: install lint test
+deploy: lint test
 	yarn $@
 
 ship_it: lint test

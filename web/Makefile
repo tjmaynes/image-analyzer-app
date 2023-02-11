@@ -1,6 +1,3 @@
-install:
-	yarn $@
-
 build:
 	yarn $@
 
@@ -19,7 +16,7 @@ lint:
 fix:
 	yarn lint:$@
 
-deploy: install lint build
+deploy: lint build
 	yarn wrangler pages publish ./dist --project-name "image-analyzer-web"
 
 ship_it: lint test
