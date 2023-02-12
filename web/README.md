@@ -1,4 +1,4 @@
-# web
+# Web
 
 > a React app for analyzing images using MobileNet and ChatGPT
 
