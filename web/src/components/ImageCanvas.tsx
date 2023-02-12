@@ -166,16 +166,12 @@ const resize = (
   const MAX_WIDTH = 500
   const MAX_HEIGHT = 500
 
-  if (width > height) {
-    if (width > MAX_WIDTH) {
-      height = height * (MAX_WIDTH / width)
-      width = MAX_WIDTH
-    }
-  } else {
-    if (height > MAX_HEIGHT) {
-      width = width * (MAX_HEIGHT / height)
-      height = MAX_HEIGHT
-    }
+  if (width > height && width > MAX_WIDTH) {
+    height = height * (MAX_WIDTH / width)
+    width = MAX_WIDTH
+  } else if (height > MAX_HEIGHT) {
+    width = width * (MAX_HEIGHT / height)
+    height = MAX_HEIGHT
   }
 
   return { width, height }
