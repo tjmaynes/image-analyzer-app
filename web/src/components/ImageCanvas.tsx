@@ -3,11 +3,11 @@ import { BeatLoader } from 'react-spinners'
 import { ImageMetadata } from '../types'
 
 type ImageCanvasProps = {
-  imageFile: Blob
+  image: Blob
   onRender: (data: ImageMetadata) => void
 }
 
-export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
+export const ImageCanvas = ({ image, onRender }: ImageCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [
     {
@@ -29,13 +29,13 @@ export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
   })
 
   useEffect(() => {
-    createImageBitmap(imageFile).then((imageBitmap) => {
+    createImageBitmap(image).then((imageBitmap) => {
       dispatch({
         type: Action.ReadyToRenderImage,
         imageBitmap,
       })
     })
-  }, [imageFile])
+  }, [image])
 
   useEffect(() => {
     if (!imageBitmap) return
@@ -70,7 +70,7 @@ export const ImageCanvas = ({ imageFile, onRender }: ImageCanvasProps) => {
   useEffect(() => {
     if (imageData && imageURL)
       onRender({
-        name: imageFile.name,
+        name: image.name,
         imageData: imageData,
         imageURL: imageURL,
         imageDimensions: {

@@ -4,16 +4,20 @@ body {
   background-color: #f3f4f7;
 }
 
-.github-ribbon {
-  position: fixed;
+header {
+  padding: 0 20px;
 }
 
-.container {
+.content {
   display: flex;
-  padding-top: 150px;
+  flex-flow: column wrap;
+  align-items: flex-end;
+  padding: 0 30px;
   min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
+
+  @media (max-width: 800px) {
+    align-items: center;
+  }
 }
 
 #form-file-upload {
@@ -83,19 +87,34 @@ body {
   color: red;
 }
 
+.image-analyzer-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 35px;
+
+  @media (max-width: 800px) {
+    flex-flow: column wrap;
+    align-items: center;
+  }
+}
+
 .image-analysis-container {
   display: flex;
   flex-flow: column wrap;
   align-items: center;
   height: 100%;
   max-width: 500px;
-  padding: 35px 30px 30px 30px;
-  border-bottom: 1px solid #000;
+  padding: 0px 30px 30px 30px;
+
+  @media (max-width: 800px) {
+    padding-top: 35px;
+  }
 }
 
 .image-analysis-container:first-child {
-  padding-top: 0px;
-  border-bottom: none;
+  padding-top: 0;
 }
 
 .image-analysis-image-container {

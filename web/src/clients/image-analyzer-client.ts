@@ -21,13 +21,9 @@ export class ImageAnalyzerClient implements IImageAnalyzerClient {
   }
 
   analyze = async (
-    image: ImageMetadata,
-    model: MobileNet
+    image: ImageMetadata
   ): Promise<Result<ImageClassificationData, Error>> => {
-    const classificationData = await this.imageClassifierClient.classify(
-      image,
-      model
-    )
+    const classificationData = await this.imageClassifierClient.classify(image)
     if (classificationData.ok) {
       const describeOption = await this.apiClient.describe(
         classificationData.val.predictions[0].className

@@ -1,4 +1,3 @@
-import { MobileNet } from '@tensorflow-models/mobilenet'
 import { Option, Result } from 'ts-results'
 
 export type ImageProcessingResults = { data: ImageMetadata[]; errors: Error[] }
@@ -24,8 +23,7 @@ export type ImageClassificationData = ImageMetadata &
 
 export interface IImageClassifierClient {
   classify(
-    imageMetadata: ImageMetadata,
-    model: MobileNet
+    imageMetadata: ImageMetadata
   ): Promise<Result<ClassificationData, Error>>
 }
 
@@ -38,8 +36,5 @@ export interface IApiClient {
 }
 
 export interface IImageAnalyzerClient {
-  analyze(
-    image: ImageMetadata,
-    model: MobileNet
-  ): Promise<Result<ImageClassificationData, Error>>
+  analyze(image: ImageMetadata): Promise<Result<ImageClassificationData, Error>>
 }

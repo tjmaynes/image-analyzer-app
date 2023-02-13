@@ -1,14 +1,13 @@
-import { MobileNet } from '@tensorflow-models/mobilenet'
-import React, { useReducer, useCallback } from 'react'
-import { memo } from 'react'
-import { useClientContext } from '../ClientContext'
-import { ImageClassificationData, ImageMetadata } from '../types'
+import React, { useReducer, useCallback, memo } from 'react'
 import { ImageCanvas } from './ImageCanvas'
 import { ImageAnalysisContainer } from './ImageAnalysisContainer'
+import { useClientContext } from '../ClientContext'
+import { ImageClassificationData, ImageMetadata } from '../types'
+import { RefreshButton } from './RefreshButton'
 
-type ImageAnalyzerProps = { imageFile: Blob; model: MobileNet }
+type ImageAnalyzerProps = { image: Blob }
 
-const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
+export const ImageAnalyzer = ({ image }: ImageAnalyzerProps) => {
   const { imageAnalyzerClient } = useClientContext()
 
   const [{ isLoadingImage, data, error }, dispatch] = useReducer(reducer, {
@@ -20,7 +19,7 @@ const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
   const handleImageCanvasRender = useCallback(
     (data: ImageMetadata) => {
       imageAnalyzerClient
-        .analyze(data, model)
+        ?.analyze(data)
         .then((result) => {
           if (result.ok)
             dispatch({
@@ -40,7 +39,7 @@ const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
           })
         })
     },
-    [imageFile, imageAnalyzerClient]
+    [image, imageAnalyzerClient]
   )
 
   return (
@@ -48,14 +47,25 @@ const ImageAnalyzer = ({ imageFile, model }: ImageAnalyzerProps) => {
       {!isLoadingImage && !error && data && (
         <ImageAnalysisContainer data={data} />
       )}
-      <ImageCanvas imageFile={imageFile} onRender={handleImageCanvasRender} />
+      <ImageCanvas image={image} onRender={handleImageCanvasRender} />
     </>
   )
 }
 
-export const MemoizedImageAnalyzer = memo((props: ImageAnalyzerProps) => (
+const MemoizedImageAnalyzer = memo((props: ImageAnalyzerProps) => (
   <ImageAnalyzer {...props} />
 ))
+
+export const MultiImageAnalyzer = ({ images }: { images: Blob[] }) => (
+  <>
+    <RefreshButton />
+    <section className="image-analyzer-container">
+      {images.map((data, index) => (
+        <MemoizedImageAnalyzer key={index} image={data} />
+      ))}
+    </section>
+  </>
+)
 
 enum Action {
   ProcessingImage = 'Processing image',
