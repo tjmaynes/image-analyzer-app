@@ -14,7 +14,7 @@ export const HomePage = () => {
   }, [imageFile, setImageFile])
 
   return (
-    <div>
+    <div className="home">
       {imageFile && <ImageAnalyzer image={imageFile} />}
       <Link to="/new">Try it out?</Link>
     </div>

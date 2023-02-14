@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import * as mobilenet from '@tensorflow-models/mobilenet'
 import { LoadingSpinner } from './components'
 import AppRouter from './AppRouter'
-import './App.css'
+import './App.scss'
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
+    <div className="wrapper">
       <header>
         <h1>
           <Link to="/">Image Analyzer</Link>

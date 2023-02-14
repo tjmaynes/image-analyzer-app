@@ -15,8 +15,8 @@ export const ImageAnalysisContainer = ({ data }: AnalysisContainerProps) => {
           height={data.imageDimensions.height}
         />
       </div>
-      <div className="image-analysis-metadata-container">
-        <section>
+      <section className="image-analysis-metadata-container">
+        <div>
           <h2>Predictions</h2>
           <ul className="predictions">
             {data.predictions.map(({ className, probability }, index) => (
@@ -26,12 +26,12 @@ export const ImageAnalysisContainer = ({ data }: AnalysisContainerProps) => {
               </li>
             ))}
           </ul>
-        </section>
-        <section>
+        </div>
+        <div>
           <h2>Background</h2>
           <p>{data.description}</p>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

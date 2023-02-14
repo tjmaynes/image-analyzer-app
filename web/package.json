@@ -17,7 +17,8 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.8.1",
     "react-router-dom": "^6.8.1",
-    "react-spinners": "^0.13.8"
+    "react-spinners": "^0.13.8",
+    "sass": "^1.58.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.4.1",
