@@ -2,7 +2,7 @@ import { KVNamespace } from '@cloudflare/workers-types'
 import { Some, None, Option } from 'ts-results'
 import { ICacheClient } from '../types'
 
-export class CacheClient implements ICacheClient {
+export class CacheClientWrapper implements ICacheClient {
   private readonly keyvalueStore: KVNamespace
 
   constructor(keyvalueStore: KVNamespace) {

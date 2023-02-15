@@ -12,5 +12,13 @@
     "es2021": true,
     "jest": true
   },
-  "ignorePatterns": ["node_modules"]
+  "ignorePatterns": ["node_modules"],
+  "overrides": [
+    {
+      "files": ["src/**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
 }

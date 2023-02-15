@@ -3,19 +3,22 @@ import { cors } from 'hono/cors'
 import { graphqlServer } from '@hono/graphql-server'
 import { Configuration, OpenAIApi } from 'openai-edge'
 import { Bindings } from './bindings'
-import { CacheClient, OpenAIConversationClient } from './clients'
+import { OpenAIConversationClient } from './clients'
 import { rootResolver, schema } from './handlers'
 import { AppDependencies, AppDependenciesBuilder } from './types'
+import { OpenAIAPIClientWrapper, CacheClientWrapper } from './wrappers'
 
 export const appDependenciesBuilder = (
   keyvalueStore: KVNamespace,
   openAIApiKey: string
 ): AppDependencies => {
-  const configuration = new Configuration({ apiKey: openAIApiKey })
-  const openai = new OpenAIApi(configuration)
-  const cacheClient = new CacheClient(keyvalueStore)
+  const openai = new OpenAIApi(new Configuration({ apiKey: openAIApiKey }))
+
   return {
-    conversationClient: new OpenAIConversationClient(openai, cacheClient),
+    conversationClient: new OpenAIConversationClient(
+      new CacheClientWrapper(keyvalueStore),
+      new OpenAIAPIClientWrapper(openai)
+    ),
   }
 }
 

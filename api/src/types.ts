@@ -1,5 +1,13 @@
 import { Option } from 'ts-results'
 
+export interface IOpenAIAPIClient {
+  createCompletion(request: {
+    model: string
+    max_tokens: number
+    prompt: string
+  }): Promise<{ json: <T>() => Promise<T> }>
+}
+
 export interface ICacheClient {
   get(key: string): Promise<Option<string>>
   put(key: string, value: string): Promise<void>

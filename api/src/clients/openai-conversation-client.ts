@@ -1,13 +1,12 @@
-import { OpenAIApi } from 'openai-edge'
-import { ICacheClient, IConversationClient } from '../types'
+import { ICacheClient, IConversationClient, IOpenAIAPIClient } from '../types'
 
 export class OpenAIConversationClient implements IConversationClient {
-  private readonly openai: OpenAIApi
   private readonly cacheClient: ICacheClient
+  private readonly openai: IOpenAIAPIClient
 
-  constructor(openai: OpenAIApi, cacheClient: ICacheClient) {
-    this.openai = openai
+  constructor(cacheClient: ICacheClient, openai: IOpenAIAPIClient) {
     this.cacheClient = cacheClient
+    this.openai = openai
   }
 
   converse = async (context: string, prompt: string): Promise<string> => {
