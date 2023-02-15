@@ -10,7 +10,7 @@ export const HomePage = () => {
   return (
     <div className="home">
       {isLoading && <LoadingSpinner isLoading={isLoading} />}
-      {data && <ImageAnalyzer ImageUploadInfo={data} />}
+      {data && <ImageAnalyzer imageUploadInfo={data} />}
       <Link to="/upload">Try it out?</Link>
     </div>
   )

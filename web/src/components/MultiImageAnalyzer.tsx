@@ -4,7 +4,7 @@ import { ImageAnalyzer } from './ImageAnalyzer'
 import { RefreshButton } from './RefreshButton'
 
 const MemoizedImageAnalyzer = memo(
-  (props: { ImageUploadInfo: ImageUploadInfo }) => <ImageAnalyzer {...props} />
+  (props: { imageUploadInfo: ImageUploadInfo }) => <ImageAnalyzer {...props} />
 )
 
 export const MultiImageAnalyzer = ({
@@ -16,7 +16,7 @@ export const MultiImageAnalyzer = ({
     <RefreshButton />
     <section className="image-analyzer-container">
       {images.map((data, index) => (
-        <MemoizedImageAnalyzer key={index} ImageUploadInfo={data} />
+        <MemoizedImageAnalyzer key={index} imageUploadInfo={data} />
       ))}
     </section>
   </>
