@@ -1,80 +1,35 @@
-import React, { ReactNode, useEffect, useReducer } from 'react'
-import { Link } from 'react-router-dom'
-import * as mobilenet from '@tensorflow-models/mobilenet'
-import { LoadingSpinner } from './components'
-import AppRouter from './AppRouter'
-import './App.scss'
+import React from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { HomePage, UploadPage, NotFoundPage } from './pages'
+import { LoadingSpinner, Wrapper } from './components'
+import { queryClient } from './queries'
+import { imageAnalyzerClientLoader } from './loaders'
 
-const Wrapper = ({ children }: { children: ReactNode }) => {
-  return (
-    <div className="wrapper">
-      <header>
-        <h1>
-          <Link to="/">Image Analyzer</Link>
-        </h1>
-      </header>
-      <div className="content">{children}</div>
-    </div>
-  )
-}
-
-const App = () => {
-  const [{ isLoadingModel, model }, dispatch] = useReducer(reducer, {
-    isLoadingModel: true,
-    model: null,
-  })
-
-  useEffect(() => {
-    if (!model) {
-      mobilenet.load().then((model) => {
-        dispatch({ type: Action.ReadyToUploadImages, model: model })
-      })
-    }
-  }, [model])
-
-  return (
-    <Wrapper>
-      {isLoadingModel && (
-        <LoadingSpinner
-          processingText="Loading model"
-          isLoading={isLoadingModel}
-        />
-      )}
-      {!isLoadingModel && model && <AppRouter model={model} />}
-    </Wrapper>
-  )
-}
+const App = () => (
+  <Wrapper>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider
+        router={createBrowserRouter([
+          {
+            element: <HomePage />,
+            path: '/',
+            loader: imageAnalyzerClientLoader(queryClient),
+          },
+          {
+            path: '/upload',
+            element: <UploadPage />,
+            loader: imageAnalyzerClientLoader(queryClient),
+          },
+          {
+            element: <NotFoundPage />,
+            path: '*',
+          },
+        ])}
+        fallbackElement={<LoadingSpinner isLoading />}
+      />
+    </QueryClientProvider>
+  </Wrapper>
+)
 
 export default App
-
-enum Action {
-  LoadingModel = 'Loading model',
-  ReadyToUploadImages = 'Ready to upload images',
-}
-
-type AppAction =
-  | { type: Action.LoadingModel }
-  | { type: Action.ReadyToUploadImages; model: mobilenet.MobileNet }
-
-type AppState = {
-  isLoadingModel: boolean
-  model: mobilenet.MobileNet | null
-}
-
-const reducer = (state: AppState, action: AppAction): AppState => {
-  switch (action.type) {
-    case Action.LoadingModel:
-      return {
-        ...state,
-        isLoadingModel: true,
-      }
-    case Action.ReadyToUploadImages:
-      return {
-        ...state,
-        isLoadingModel: false,
-        model: action.model,
-      }
-    default:
-      return state
-  }
-}

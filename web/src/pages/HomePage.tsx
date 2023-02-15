@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-import { ImageAnalyzer } from '../components'
+import { ImageAnalyzer, LoadingSpinner } from '../components'
+import { loadImageQuery } from '../queries'
 
 export const HomePage = () => {
-  const [imageFile, setImageFile] = useState<Blob | null>(null)
-
-  useEffect(() => {
-    if (!imageFile) {
-      fetch('/images/sample.jpg')
-        .then((response) => response.blob())
-        .then((imageBlob) => setImageFile(imageBlob))
-    }
-  }, [imageFile, setImageFile])
+  const { data, isLoading } = useQuery(loadImageQuery('/images/sample.jpg'))
 
   return (
     <div className="home">
-      {imageFile && <ImageAnalyzer image={imageFile} />}
-      <Link to="/new">Try it out?</Link>
+      {isLoading && <LoadingSpinner isLoading={isLoading} />}
+      {data && <ImageAnalyzer ImageUploadInfo={data} />}
+      <Link to="/upload">Try it out?</Link>
     </div>
   )
 }

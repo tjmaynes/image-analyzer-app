@@ -1,4 +1,3 @@
-import { MobileNet } from '@tensorflow-models/mobilenet'
 import { Err, Ok, Result } from 'ts-results'
 import {
   IApiClient,
@@ -23,7 +22,10 @@ export class ImageAnalyzerClient implements IImageAnalyzerClient {
   analyze = async (
     image: ImageMetadata
   ): Promise<Result<ImageClassificationData, Error>> => {
-    const classificationData = await this.imageClassifierClient.classify(image)
+    const classificationData = await this.imageClassifierClient.classify(
+      image.imageData
+    )
+
     if (classificationData.ok) {
       const describeOption = await this.apiClient.describe(
         classificationData.val.predictions[0].className

@@ -1,13 +1,16 @@
 import React, { useReducer, useEffect, useRef } from 'react'
 import { BeatLoader } from 'react-spinners'
-import { ImageMetadata } from '../types'
+import { ImageMetadata, ImageUploadInfo } from '../types'
 
 type ImageCanvasProps = {
-  image: Blob
+  imageUploadInfo: ImageUploadInfo
   onRender: (data: ImageMetadata) => void
 }
 
-export const ImageCanvas = ({ image, onRender }: ImageCanvasProps) => {
+export const ImageCanvas = ({
+  imageUploadInfo,
+  onRender,
+}: ImageCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [
     {
@@ -29,13 +32,15 @@ export const ImageCanvas = ({ image, onRender }: ImageCanvasProps) => {
   })
 
   useEffect(() => {
-    createImageBitmap(image).then((imageBitmap) => {
-      dispatch({
-        type: Action.ReadyToRenderImage,
-        imageBitmap,
+    if (!imageBitmap) {
+      createImageBitmap(imageUploadInfo.imageBlob).then((bitmap) => {
+        dispatch({
+          type: Action.ReadyToRenderImage,
+          imageBitmap: bitmap,
+        })
       })
-    })
-  }, [image])
+    }
+  }, [imageUploadInfo, imageBitmap])
 
   useEffect(() => {
     if (!imageBitmap) return
@@ -70,7 +75,7 @@ export const ImageCanvas = ({ image, onRender }: ImageCanvasProps) => {
   useEffect(() => {
     if (imageData && imageURL)
       onRender({
-        name: image.name,
+        ...imageUploadInfo,
         imageData: imageData,
         imageURL: imageURL,
         imageDimensions: {
@@ -78,7 +83,7 @@ export const ImageCanvas = ({ image, onRender }: ImageCanvasProps) => {
           height: imageHeight,
         },
       })
-  }, [imageData, imageURL])
+  }, [imageUploadInfo, imageData, imageURL])
 
   return (
     <>

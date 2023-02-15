@@ -1,118 +1,89 @@
-import React, { useReducer, useCallback, memo } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { ImageCanvas } from './ImageCanvas'
-import { ImageAnalysisContainer } from './ImageAnalysisContainer'
-import { useClientContext } from '../ClientContext'
-import { ImageClassificationData, ImageMetadata } from '../types'
-import { RefreshButton } from './RefreshButton'
+import { ImageMetadata, ImageUploadInfo } from '../types'
+import { analyzeImageQuery } from '../queries'
+import { LoadingSpinner } from './LoadingSpinner'
 
-type ImageAnalyzerProps = { image: Blob }
+type ImageAnalyzerProps = { imageUploadInfo: ImageUploadInfo }
 
-export const ImageAnalyzer = ({ image }: ImageAnalyzerProps) => {
-  const { imageAnalyzerClient } = useClientContext()
+export const ImageAnalyzer = ({ imageUploadInfo }: ImageAnalyzerProps) => {
+  const [imageMetadata, setImageMetadata] = useState<ImageMetadata | null>(null)
 
-  const [{ isLoadingImage, data, error }, dispatch] = useReducer(reducer, {
-    isLoadingImage: true,
-    data: null,
-    error: null,
-  })
-
-  const handleImageCanvasRender = useCallback(
-    (data: ImageMetadata) => {
-      imageAnalyzerClient
-        ?.analyze(data)
-        .then((result) => {
-          if (result.ok)
-            dispatch({
-              type: Action.ClassifiedImage,
-              data: result.val,
-            })
-          else
-            dispatch({
-              type: Action.FailedProcessingImage,
-              error: result.val,
-            })
-        })
-        .catch((e) => {
-          dispatch({
-            type: Action.FailedProcessingImage,
-            error: e,
-          })
-        })
+  const handleOnImageRender = useCallback(
+    (imageMetadata) => {
+      setImageMetadata(imageMetadata)
     },
-    [image, imageAnalyzerClient]
+    [imageMetadata]
   )
 
   return (
     <>
-      {!isLoadingImage && !error && data && (
-        <ImageAnalysisContainer data={data} />
+      {imageMetadata && (
+        <ImageAnalyzerContainer imageMetadata={imageMetadata} />
       )}
-      <ImageCanvas image={image} onRender={handleImageCanvasRender} />
+      {!imageMetadata && (
+        <ImageCanvas
+          imageUploadInfo={imageUploadInfo}
+          onRender={handleOnImageRender}
+        />
+      )}
     </>
   )
 }
 
-const MemoizedImageAnalyzer = memo((props: ImageAnalyzerProps) => (
-  <ImageAnalyzer {...props} />
-))
+const ImageAnalyzerContainer = ({
+  imageMetadata,
+}: {
+  imageMetadata: ImageMetadata
+}) => {
+  const { data, isLoading } = useQuery(analyzeImageQuery(imageMetadata))
 
-export const MultiImageAnalyzer = ({ images }: { images: Blob[] }) => (
-  <>
-    <RefreshButton />
-    <section className="image-analyzer-container">
-      {images.map((data, index) => (
-        <MemoizedImageAnalyzer key={index} image={data} />
-      ))}
-    </section>
-  </>
-)
-
-enum Action {
-  ProcessingImage = 'Processing image',
-  ClassifiedImage = 'Classified image',
-  FailedProcessingImage = 'Failed processing image',
+  return (
+    <>
+      {isLoading && <LoadingSpinner isLoading={isLoading} />}
+      {data && (
+        <div className="image-analysis-container">
+          <div className="image-analysis-image-container">
+            <img
+              src={data.imageURL}
+              width={data.imageDimensions.width}
+              height={data.imageDimensions.height}
+            />
+          </div>
+          <section className="image-analysis-metadata-container">
+            <div>
+              <h2>Predictions</h2>
+              <ul className="predictions">
+                {data.predictions.map(({ className, probability }, index) => (
+                  <li key={index}>
+                    {prettyPrintClassName(className)}:{' '}
+                    {prettyPrintPercentage(probability)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2>Background</h2>
+              <p>{data.description}</p>
+            </div>
+          </section>
+        </div>
+      )}
+    </>
+  )
 }
 
-type AnalyzerAction =
-  | { type: Action.ProcessingImage; image: ImageMetadata }
-  | {
-      type: Action.ClassifiedImage
-      data: ImageClassificationData
-    }
-  | {
-      type: Action.FailedProcessingImage
-      error: Error
-    }
+const prettyPrintClassName = (className: string) =>
+  className
+    .split(' ')
+    .map((word) => capitalizeWord(word))
+    .join(' ')
 
-type AnalyzerState = {
-  isLoadingImage: boolean
-  data: ImageClassificationData | null
-  error: Error | null
+const capitalizeWord = (word: string): string => {
+  if (word.length <= 2) return word
+  return `${word[0].toUpperCase()}${word.substring(1)}`
 }
 
-const reducer = (
-  state: AnalyzerState,
-  action: AnalyzerAction
-): AnalyzerState => {
-  switch (action.type) {
-    case Action.ProcessingImage:
-      return {
-        ...state,
-        isLoadingImage: true,
-      }
-    case Action.ClassifiedImage:
-      return {
-        ...state,
-        isLoadingImage: false,
-        data: action.data,
-      }
-    case Action.FailedProcessingImage:
-      return {
-        ...state,
-        isLoadingImage: false,
-        error: action.error,
-      }
-    default:
-      return state
-  }
-}
+const prettyPrintPercentage = (probability: number) =>
+  `${(probability * 100).toFixed(0)}%`

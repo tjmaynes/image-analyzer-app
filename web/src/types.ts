@@ -1,9 +1,8 @@
 import { Option, Result } from 'ts-results'
 
-export type ImageProcessingResults = { data: ImageMetadata[]; errors: Error[] }
+export type ImageUploadInfo = { id: string; imageBlob: Blob }
 
-export type ImageMetadata = {
-  name: string
+export type ImageMetadata = ImageUploadInfo & {
   imageData: ImageData
   imageURL: string
   imageDimensions: { width: number; height: number }
@@ -12,7 +11,6 @@ export type ImageMetadata = {
 export type Prediction = { className: string; probability: number }
 
 export type ClassificationData = {
-  name: string
   predictions: Prediction[]
 }
 
@@ -22,9 +20,7 @@ export type ImageClassificationData = ImageMetadata &
   }
 
 export interface IImageClassifierClient {
-  classify(
-    imageMetadata: ImageMetadata
-  ): Promise<Result<ClassificationData, Error>>
+  classify(imageData: ImageData): Promise<Result<ClassificationData, Error>>
 }
 
 export type DescribeApiResponse = {

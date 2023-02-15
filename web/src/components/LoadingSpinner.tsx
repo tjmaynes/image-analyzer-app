@@ -2,7 +2,7 @@ import React from 'react'
 import { BeatLoader } from 'react-spinners'
 
 type LoadingSpinnerProps = {
-  processingText: string
+  processingText?: string
   isLoading: boolean
 }
 
@@ -11,7 +11,7 @@ export const LoadingSpinner = ({
   isLoading,
 }: LoadingSpinnerProps) => (
   <div>
-    <h1 className="processing-message">{processingText}</h1>
+    {processingText && <h1 className="processing-message">{processingText}</h1>}
     <BeatLoader
       color="#189a92"
       loading={isLoading}

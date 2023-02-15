@@ -1,3 +1,3 @@
 export * from './HomePage'
-export * from './NewImageAnalysisPage'
+export * from './UploadPage'
 export * from './NotFoundPage'
