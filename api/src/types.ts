@@ -5,7 +5,7 @@ export interface IOpenAIAPIClient {
     model: string
     max_tokens: number
     prompt: string
-  }): Promise<{ json: <T>() => Promise<T> }>
+  }): Promise<Response>
 }
 
 export interface ICacheClient {

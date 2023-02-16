@@ -37,7 +37,7 @@ export class ImageAnalyzerClient implements IImageAnalyzerClient {
           ...describeOption.val.data.describe,
         })
       } else {
-        return Err(new Error(`Couldn't infer image: ${image.name}`))
+        return Err(new Error(`Couldn't infer image: ${image.id}`))
       }
     } else {
       return classificationData

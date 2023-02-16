@@ -16,21 +16,25 @@ export type ClassificationData = {
 
 export type ImageClassificationData = ImageMetadata &
   ClassificationData & {
-    description: string
+    background: string
   }
 
+export type ImageClassificationResult = Result<ClassificationData, Error>
+
 export interface IImageClassifierClient {
-  classify(imageData: ImageData): Promise<Result<ClassificationData, Error>>
+  classify(imageData: ImageData): Promise<ImageClassificationResult>
 }
 
 export type DescribeApiResponse = {
-  data: { describe: { description: string } }
+  data: { describe: { background: string } }
 }
 
 export interface IApiClient {
   describe(thing: string): Promise<Option<DescribeApiResponse>>
 }
 
+export type ImageAnalysisResult = Result<ImageClassificationData, Error>
+
 export interface IImageAnalyzerClient {
-  analyze(image: ImageMetadata): Promise<Result<ImageClassificationData, Error>>
+  analyze(image: ImageMetadata): Promise<ImageAnalysisResult>
 }

@@ -1,35 +1,21 @@
 import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query'
-import { HomePage, UploadPage, NotFoundPage } from './pages'
-import { LoadingSpinner, Wrapper } from './components'
-import { queryClient } from './queries'
-import { imageAnalyzerClientLoader } from './loaders'
+import {
+  RouterProvider,
+  createBrowserRouter,
+  RouteObject,
+} from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { LoadingSpinner } from './components'
 
-const App = () => (
-  <Wrapper>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider
-        router={createBrowserRouter([
-          {
-            element: <HomePage />,
-            path: '/',
-            loader: imageAnalyzerClientLoader(queryClient),
-          },
-          {
-            path: '/upload',
-            element: <UploadPage />,
-            loader: imageAnalyzerClientLoader(queryClient),
-          },
-          {
-            element: <NotFoundPage />,
-            path: '*',
-          },
-        ])}
-        fallbackElement={<LoadingSpinner isLoading />}
-      />
-    </QueryClientProvider>
-  </Wrapper>
+type AppProps = { routes: RouteObject[]; queryClient: QueryClient }
+
+const App = ({ routes, queryClient }: AppProps) => (
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider
+      router={createBrowserRouter(routes)}
+      fallbackElement={<LoadingSpinner isLoading />}
+    />
+  </QueryClientProvider>
 )
 
 export default App

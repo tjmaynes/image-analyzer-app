@@ -23,7 +23,7 @@ describe('API', () => {
       it('should return a OK (200) response', async () => {
         const thing = 'something'
         const body = JSON.stringify({
-          query: `{ describe(thing: "${thing}"){ description } }`,
+          query: `{ describe(thing: "${thing}"){ background } }`,
         })
         const req = new Request('http://localhost/graphql', {
           method: 'POST',
@@ -42,9 +42,9 @@ describe('API', () => {
         )
 
         const { data } = await res.json<{
-          data: { describe: { description: string } }
+          data: { describe: { background: string } }
         }>()
-        expect(data.describe.description).toBe(
+        expect(data.describe.background).toBe(
           'I believe that this is a real conversation...'
         )
       })

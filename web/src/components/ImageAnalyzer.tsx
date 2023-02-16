@@ -11,7 +11,7 @@ export const ImageAnalyzer = ({ imageUploadInfo }: ImageAnalyzerProps) => {
   const [imageMetadata, setImageMetadata] = useState<ImageMetadata | null>(null)
 
   const handleOnImageRender = useCallback(
-    (imageMetadata) => {
+    (imageMetadata: ImageMetadata) => {
       setImageMetadata(imageMetadata)
     },
     [imageMetadata]
@@ -65,7 +65,7 @@ const ImageAnalyzerContainer = ({
             </div>
             <div>
               <h2>Background</h2>
-              <p>{data.description}</p>
+              <p aria-labelledby="background-info">{data.background}</p>
             </div>
           </section>
         </div>

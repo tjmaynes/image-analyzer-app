@@ -9,8 +9,7 @@
   "plugins": ["@typescript-eslint"],
   "env": {
     "browser": true,
-    "es2021": true,
-    "jest": true
+    "es2021": true
   },
   "ignorePatterns": ["node_modules", "dist"],
   "rules": {

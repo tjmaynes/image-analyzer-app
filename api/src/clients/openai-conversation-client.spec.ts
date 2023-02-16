@@ -28,10 +28,10 @@ describe('OpenAIConversationClient', () => {
         const getMock = jest.fn().mockResolvedValue(None)
         const mockCacheClient = createMockCacheClient(getMock, jest.fn())
 
-        const jsonMock = jest
-          .fn()
-          .mockResolvedValue({ choices: [{ text: 'this is a new answer' }] })
-        const mockOpenAIAPIWrapper = createMockOpenAIAPIWrapper(jsonMock)
+        const completionMock = jest.fn().mockResolvedValue({
+          json: () => ({ choices: [{ text: 'this is a new answer' }] }),
+        })
+        const mockOpenAIAPIWrapper = createMockOpenAIAPIWrapper(completionMock)
 
         const sut = new OpenAIConversationClient(
           mockCacheClient(),
@@ -45,7 +45,7 @@ describe('OpenAIConversationClient', () => {
   })
 
   const createMockOpenAIAPIWrapper = (
-    jsonMock: jest.Mock
+    completionMock: jest.Mock
   ): jest.Mock<IOpenAIAPIClient> => {
     return jest.fn<IOpenAIAPIClient, []>(() => {
       return {
@@ -53,10 +53,8 @@ describe('OpenAIConversationClient', () => {
           model: string
           max_tokens: number
           prompt: string
-        }): Promise<{ json: <T>() => Promise<T> }> {
-          return Promise.resolve({
-            json: jsonMock,
-          })
+        }): Promise<Response> {
+          return completionMock()
         },
       }
     })

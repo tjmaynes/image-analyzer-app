@@ -16,12 +16,6 @@ To install project dependencies, run the following command:
 make install
 ```
 
-To run all tests, run the following command:
-
-```bash
-make test
-```
-
 To start the application, run the following command:
 
 ```bash

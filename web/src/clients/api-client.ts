@@ -16,7 +16,7 @@ export class ApiClient implements IApiClient {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        query: `{ describe(thing: "${thing}"){ description } }`,
+        query: `{ describe(thing: "${thing}"){ background } }`,
       }),
     })
       .then((resp) => resp.json())

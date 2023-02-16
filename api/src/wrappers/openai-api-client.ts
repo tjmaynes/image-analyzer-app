@@ -12,8 +12,5 @@ export class OpenAIAPIClientWrapper implements IOpenAIAPIClient {
     model: string
     max_tokens: number
     prompt: string
-  }): Promise<{ json: <T>() => Promise<T> }> => {
-    const result = await this.openai.createCompletion(request)
-    return await result.json()
-  }
+  }): Promise<Response> => await this.openai.createCompletion(request)
 }
