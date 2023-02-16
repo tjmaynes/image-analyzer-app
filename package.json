@@ -1,4 +1,14 @@
 {
   "private": true,
-  "workspaces": [ "web", "api" ]
+  "workspaces": [
+    "web",
+    "api",
+    "e2e"
+  ],
+  "scripts": {
+    "start": "concurrently \"make start_api\" \"make start_web\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
