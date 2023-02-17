@@ -10,5 +10,22 @@
 
 ## Usage
 
-To run the `web` app, check out these [instructions](./web/README.md).
-To run the `api` server, check out these [instructions](./api/README.md).
+To install project dependencies, run the following command:
+```bash
+make install
+``` 
+
+To start the application, run the following command:
+```bash
+make start
+```
+
+To run `e2e` tests, run the following command:
+```bash
+make e2e
+```
+
+To deploy the application, run the following command:
+```bash
+make deploy
+```
