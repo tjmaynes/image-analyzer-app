@@ -6,7 +6,6 @@ import {
   MobileNetImageClassifierClient,
 } from './clients'
 import {
-  IImageAnalyzerClient,
   ImageClassificationData,
   ImageMetadata,
   AppDependencies,

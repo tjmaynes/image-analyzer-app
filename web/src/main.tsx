@@ -4,7 +4,7 @@ import App from './App'
 import routesConfig from './routes'
 import { queryClient } from './queries'
 import { appDependenciesLoader } from './loaders'
-import '@picocss/pico'
+import './style.scss'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

@@ -41,7 +41,7 @@ const ImageAnalyzerContainer = ({
   if (isLoading) return <progress></progress>
 
   return data ? (
-    <article className="grid">
+    <div className="grid">
       <img
         src={data.imageURL}
         width={data.imageDimensions.width}
@@ -60,7 +60,7 @@ const ImageAnalyzerContainer = ({
         <h3>Background</h3>
         <p aria-labelledby="background-info">{data.background}</p>
       </hgroup>
-    </article>
+    </div>
   ) : (
     <></>
   )

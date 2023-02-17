@@ -44,7 +44,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   }
 
   return (
-    <article>
+    <article className="image-uploader">
       <form id="form-file-upload" onSubmit={(e) => e.preventDefault()}>
         <input
           ref={inputRef}
@@ -57,10 +57,10 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
         <label id="label-file-upload" htmlFor="input-file-upload">
           <button
             aria-busy={isLoading ? 'true' : 'false'}
-            className="secondary"
+            className="upload-button"
             onClick={onButtonClick}
           >
-            Analyze an image
+            Tap to analyze images
           </button>
         </label>
       </form>

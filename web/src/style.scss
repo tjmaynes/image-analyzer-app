@@ -1,0 +1,42 @@
+// Import Pico
+@import '@picocss/pico/scss/pico';
+
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+  --primary: #d81b60;
+  --primary-hover: #c2185b;
+  --primary-focus: rgba(216, 27, 96, 0.125);
+  --primary-inverse: #fff;
+}
+
+h1 {
+  margin-bottom: 0.8em;
+}
+
+h3:not(:first-child) {
+  margin-top: 1em;
+}
+
+img {
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+hgroup {
+  margin-bottom: 0;
+}
+
+.image-uploader {
+  border-width: 2px;
+  border: 4px dashed #c2185b;
+  border-radius: 24px;
+}
+
+li:first-child {
+  font-size: 0.9em;
+  font-weight: 800;
+}
+
+li:not(:first-child) {
+  font-size: 0.8em;
+}
