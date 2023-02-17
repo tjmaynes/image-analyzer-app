@@ -6,6 +6,7 @@
     "e2e"
   ],
   "scripts": {
+    "dev": "concurrently \"make dev_api\" \"make dev_web\"",
     "start": "concurrently \"make start_api\" \"make start_web\""
   },
   "devDependencies": {

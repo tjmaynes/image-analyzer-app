@@ -11,9 +11,10 @@ export const MultiImageAnalyzer = ({
 }: {
   images: ImageUploadInfo[]
 }) => (
-  <section>
+  <div>
+    <h1>Analysis Results</h1>
     {images.map((data, index) => (
       <MemoizedImageAnalyzer key={index} imageUploadInfo={data} />
     ))}
-  </section>
+  </div>
 )

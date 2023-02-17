@@ -3,23 +3,55 @@ import React, { ReactNode } from 'react'
 export const Wrapper = ({ children }: { children: ReactNode }) => (
   <>
     <Header />
-    <main className="container">{children}</main>
+    <main className="container">
+      <Welcome />
+      {children}
+    </main>
     <Footer />
   </>
 )
 
 const Header = () => (
-  <nav className="container-fluid">
-    <ul>
-      <li>
-        <h2>
-          <a href="/" className="primary">
-            Image Analyzer
-          </a>
-        </h2>
-      </li>
-    </ul>
-  </nav>
+  <header>
+    <nav className="container-fluid">
+      <ul>
+        <li>
+          <h2>Image Analyzer</h2>
+        </li>
+      </ul>
+    </nav>
+  </header>
+)
+
+const Welcome = () => (
+  <div>
+    <h1>Background</h1>
+    <p>
+      <strong>Image Analyzer</strong> is a Proof-of-Concept web application that
+      analyzes your images using{' '}
+      <strong>
+        <a href="https://ai.googleblog.com/2017/06/mobilenets-open-source-models-for.html">
+          MobileNet
+        </a>
+      </strong>{' '}
+      and{' '}
+      <strong>
+        <a href="https://chat.openai.com/chat">ChatGPT</a>
+      </strong>
+      .
+    </p>
+    <blockquote>
+      <strong>Technical Notes: </strong>MobileNet classifies your images in the
+      browser using Tensorflow.js. ChatGPT describes your images using a
+      GraphQL-based API running on a Cloudflare Worker.
+      <footer>
+        <cite>
+          Ping me at <a href="https://twitter.com/tjmaynes">@tjmaynes</a> for
+          any feedback. Enjoy!
+        </cite>
+      </footer>
+    </blockquote>
+  </div>
 )
 
 const Footer = () => (
