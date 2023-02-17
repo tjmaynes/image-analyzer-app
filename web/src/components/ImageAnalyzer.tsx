@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query'
 import { ImageCanvas } from './ImageCanvas'
 import { ImageMetadata, ImageUploadInfo } from '../types'
 import { analyzeImageQuery } from '../queries'
-import { LoadingSpinner } from './LoadingSpinner'
 
 type ImageAnalyzerProps = { imageUploadInfo: ImageUploadInfo }
 
@@ -39,38 +38,31 @@ const ImageAnalyzerContainer = ({
 }) => {
   const { data, isLoading } = useQuery(analyzeImageQuery(imageMetadata))
 
-  return (
-    <>
-      {isLoading && <LoadingSpinner isLoading={isLoading} />}
-      {data && (
-        <div className="image-analysis-container">
-          <div className="image-analysis-image-container">
-            <img
-              src={data.imageURL}
-              width={data.imageDimensions.width}
-              height={data.imageDimensions.height}
-            />
-          </div>
-          <section className="image-analysis-metadata-container">
-            <div>
-              <h2>Predictions</h2>
-              <ul className="predictions">
-                {data.predictions.map(({ className, probability }, index) => (
-                  <li key={index}>
-                    {prettyPrintClassName(className)}:{' '}
-                    {prettyPrintPercentage(probability)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h2>Background</h2>
-              <p aria-labelledby="background-info">{data.background}</p>
-            </div>
-          </section>
-        </div>
-      )}
-    </>
+  if (isLoading) return <progress></progress>
+
+  return data ? (
+    <article className="grid">
+      <img
+        src={data.imageURL}
+        width={data.imageDimensions.width}
+        height={data.imageDimensions.height}
+      />
+      <hgroup>
+        <h3>Predictions</h3>
+        <ul>
+          {data.predictions.map(({ className, probability }, index) => (
+            <li key={index}>
+              {prettyPrintClassName(className)}:{' '}
+              {prettyPrintPercentage(probability)}
+            </li>
+          ))}
+        </ul>
+        <h3>Background</h3>
+        <p aria-labelledby="background-info">{data.background}</p>
+      </hgroup>
+    </article>
+  ) : (
+    <></>
   )
 }
 

@@ -1,17 +1,42 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
-import { ImageAnalyzer, LoadingSpinner } from '../components'
+import { ImageAnalyzer, ImageUploader, MultiImageAnalyzer } from '../components'
 import { loadImageQuery } from '../queries'
+import { ImageUploadInfo } from '../types'
+
+const SampleImagePreview = ({ imageSource }: { imageSource: string }) => {
+  const { data, isLoading } = useQuery(loadImageQuery(imageSource))
+
+  if (isLoading) return <progress></progress>
+  return data ? <ImageAnalyzer imageUploadInfo={data} /> : <></>
+}
 
 export const HomePage = () => {
-  const { data, isLoading } = useQuery(loadImageQuery('/images/sample.jpg'))
+  const [images, setImages] = useState<ImageUploadInfo[]>([])
+
+  const processFiles = useCallback(
+    (images: Blob[]) => {
+      setImages(
+        images.map((imageBlob) => ({
+          id: imageBlob.name,
+          imageBlob,
+        }))
+      )
+    },
+    [images, setImages]
+  )
+
+  if (images.length <= 0)
+    return (
+      <section>
+        <SampleImagePreview imageSource="/images/sample.jpg" />
+        <ImageUploader onUpload={processFiles} />
+      </section>
+    )
 
   return (
-    <div className="home">
-      {isLoading && <LoadingSpinner isLoading={isLoading} />}
-      {data && <ImageAnalyzer imageUploadInfo={data} />}
-      <Link to="/upload">Try it out?</Link>
-    </div>
+    <section>
+      <MultiImageAnalyzer images={images} />
+    </section>
   )
 }

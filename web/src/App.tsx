@@ -5,7 +5,7 @@ import {
   RouteObject,
 } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { LoadingSpinner } from './components'
+import { LoadingPage } from './pages'
 
 type AppProps = { routes: RouteObject[]; queryClient: QueryClient }
 
@@ -13,7 +13,7 @@ const App = ({ routes, queryClient }: AppProps) => (
   <QueryClientProvider client={queryClient}>
     <RouterProvider
       router={createBrowserRouter(routes)}
-      fallbackElement={<LoadingSpinner isLoading />}
+      fallbackElement={<LoadingPage />}
     />
   </QueryClientProvider>
 )

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet, RouteObject } from 'react-router'
 import { Wrapper } from './components'
-import { HomePage, NotFoundPage, UploadPage } from './pages'
+import { HomePage, NotFoundPage } from './pages'
 import { IImageAnalyzerClient } from './types'
 
 const routesConfig = (
@@ -21,15 +21,11 @@ const routesConfig = (
         element: <HomePage />,
         path: '/',
       },
-      {
-        path: '/upload',
-        element: <UploadPage />,
-      },
-      {
-        element: <NotFoundPage />,
-        path: '*',
-      },
     ],
+  },
+  {
+    element: <NotFoundPage />,
+    path: '*',
   },
 ]
 

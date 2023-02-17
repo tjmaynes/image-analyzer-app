@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import routesConfig from './routes'
 import { queryClient } from './queries'
-import { imageAnalyzerClientLoader } from './loaders'
-import './App.scss'
+import { appDependenciesLoader } from './loaders'
+import '@picocss/pico'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App
-      routes={routesConfig(imageAnalyzerClientLoader(queryClient))}
+      routes={routesConfig(appDependenciesLoader(queryClient))}
       queryClient={queryClient}
     />
   </React.StrictMode>

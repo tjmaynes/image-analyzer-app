@@ -4,7 +4,7 @@ import { DescribeApiResponse, IApiClient } from '../types'
 export class ApiClient implements IApiClient {
   private readonly apiHost: string
 
-  constructor(apiHost: string) {
+  constructor(apiHost = '') {
     this.apiHost = apiHost
   }
 

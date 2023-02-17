@@ -38,3 +38,5 @@ export type ImageAnalysisResult = Result<ImageClassificationData, Error>
 export interface IImageAnalyzerClient {
   analyze(image: ImageMetadata): Promise<ImageAnalysisResult>
 }
+
+export type AppDependencies = { analyzerClient: IImageAnalyzerClient }

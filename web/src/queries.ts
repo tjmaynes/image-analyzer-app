@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { MobileNet } from '@tensorflow-models/mobilenet'
+import { load as loadModel } from '@tensorflow-models/mobilenet'
 import {
   ApiClient,
   ImageAnalyzerClient,
@@ -9,17 +9,20 @@ import {
   IImageAnalyzerClient,
   ImageClassificationData,
   ImageMetadata,
+  AppDependencies,
 } from './types'
 
 export const queryClient = new QueryClient()
 
-export const imageAnalyzerClientQuery = (model: MobileNet) => ({
-  queryKey: ['image-analyzer-client'],
-  queryFn: async (): Promise<IImageAnalyzerClient> => {
-    return new ImageAnalyzerClient(
+export const appDependenciesQuery = () => ({
+  queryKey: ['app-dependencies'],
+  queryFn: async (): Promise<AppDependencies> => {
+    const model = await loadModel()
+    const analyzerClient = new ImageAnalyzerClient(
       new MobileNetImageClassifierClient(model),
-      new ApiClient(process.env.API_HOST || '')
+      new ApiClient(process.env.API_HOST)
     )
+    return { analyzerClient }
   },
 })
 
@@ -37,11 +40,11 @@ export const loadImageQuery = (source: string) => ({
 export const analyzeImageQuery = (imageMetadata: ImageMetadata) => ({
   queryKey: ['analyze-image', imageMetadata.id],
   queryFn: async (): Promise<ImageClassificationData> => {
-    const client = queryClient.getQueryData([
-      'image-analyzer-client',
-    ]) as IImageAnalyzerClient
+    const { analyzerClient } = queryClient.getQueryData([
+      'app-dependencies',
+    ]) as AppDependencies
 
-    const result = await client.analyze(imageMetadata)
+    const result = await analyzerClient.analyze(imageMetadata)
     if (result.ok) return result.val
     else throw result.val
   },

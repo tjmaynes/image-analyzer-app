@@ -1,5 +1,4 @@
 import React, { useReducer, useEffect, useRef } from 'react'
-import { BeatLoader } from 'react-spinners'
 import { ImageMetadata, ImageUploadInfo } from '../types'
 
 type ImageCanvasProps = {
@@ -87,15 +86,7 @@ export const ImageCanvas = ({
 
   return (
     <>
-      {isLoadingImage && (
-        <BeatLoader
-          color="#189a92"
-          loading={isLoadingImage}
-          size={20}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      )}
+      {isLoadingImage && <progress></progress>}
       {!isLoadingImage && (
         <canvas
           ref={canvasRef}
