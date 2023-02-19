@@ -17,9 +17,11 @@ h3:not(:first-child) {
   margin-top: 1em;
 }
 
-img {
+canvas {
   padding: 5px;
   margin-bottom: 10px;
+  max-width: 500px;
+  max-height: 500px;
 }
 
 hgroup {

@@ -4,8 +4,6 @@ export type ImageUploadInfo = { id: string; imageBlob: Blob }
 
 export type ImageMetadata = ImageUploadInfo & {
   imageData: ImageData
-  imageURL: string
-  imageDimensions: { width: number; height: number }
 }
 
 export type Prediction = { className: string; probability: number }

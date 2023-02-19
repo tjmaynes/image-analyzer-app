@@ -27,7 +27,7 @@ const Welcome = () => (
   <div>
     <h1>Background</h1>
     <p>
-      <strong>Image Analyzer</strong> is a Proof-of-Concept web application that
+      <strong>Image Analyzer</strong> is a proof-of-concept web application that
       analyzes your images using{' '}
       <strong>
         <a href="https://ai.googleblog.com/2017/06/mobilenets-open-source-models-for.html">
@@ -38,7 +38,8 @@ const Welcome = () => (
       <strong>
         <a href="https://chat.openai.com/chat">ChatGPT</a>
       </strong>
-      .
+      . <strong>Warning</strong>: Proof-of-concept tool is not super accurate,
+      your results may vary.
     </p>
     <blockquote>
       <strong>Technical Notes: </strong>MobileNet classifies your images in the

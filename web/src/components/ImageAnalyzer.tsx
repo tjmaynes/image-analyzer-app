@@ -17,38 +17,27 @@ export const ImageAnalyzer = ({ imageUploadInfo }: ImageAnalyzerProps) => {
   )
 
   return (
-    <>
-      {imageMetadata && (
-        <ImageAnalyzerContainer imageMetadata={imageMetadata} />
-      )}
-      {!imageMetadata && (
-        <ImageCanvas
-          imageUploadInfo={imageUploadInfo}
-          onRender={handleOnImageRender}
-        />
-      )}
-    </>
+    <div className="grid">
+      <ImageCanvas
+        imageUploadInfo={imageUploadInfo}
+        onRender={handleOnImageRender}
+      />
+      {imageMetadata && <ImageDescription imageMetadata={imageMetadata} />}
+    </div>
   )
 }
 
-const ImageAnalyzerContainer = ({
+const ImageDescription = ({
   imageMetadata,
 }: {
   imageMetadata: ImageMetadata
 }) => {
   const { data, isLoading } = useQuery(analyzeImageQuery(imageMetadata))
 
-  if (isLoading) return <progress></progress>
-
-  return data ? (
-    <div className="grid">
-      <img
-        src={data.imageURL}
-        width={data.imageDimensions.width}
-        height={data.imageDimensions.height}
-      />
-      <hgroup>
-        <h3>Predictions</h3>
+  return (
+    <hgroup>
+      <h3>Predictions</h3>
+      {!isLoading && data ? (
         <ul>
           {data.predictions.map(({ className, probability }, index) => (
             <li key={index}>
@@ -57,12 +46,16 @@ const ImageAnalyzerContainer = ({
             </li>
           ))}
         </ul>
-        <h3>Background</h3>
+      ) : (
+        <progress></progress>
+      )}
+      <h3>Background</h3>
+      {!isLoading && data ? (
         <p aria-labelledby="background-info">{data.background}</p>
-      </hgroup>
-    </div>
-  ) : (
-    <></>
+      ) : (
+        <progress></progress>
+      )}
+    </hgroup>
   )
 }
 
