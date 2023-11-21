@@ -17,7 +17,7 @@ logs:
 	yarn $@
 
 deploy: lint test
-	yarn $@
+	#yarn $@
 
 ship_it: lint test
 	git push
