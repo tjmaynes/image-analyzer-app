@@ -1,0 +1,10 @@
+name = "image-analyzer-api"
+main = "./src/index.ts"
+compatibility_date = "2022-05-03"
+
+kv_namespaces = [
+    { binding = "IMAGE_ANALYZER_DB", id = "0f0ef886ef71444bad9f2914921416f3", preview_id = "8c15540c59064f35868f959cd15ce2a1" }
+]
+
+[dev]
+port = 8081

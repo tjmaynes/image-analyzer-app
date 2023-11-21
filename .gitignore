@@ -1,0 +1,10 @@
+# Macos
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+.fleet/
+
+# Node
+node_modules/
