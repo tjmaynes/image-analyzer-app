@@ -1,31 +1,34 @@
-# Image Analyzer App
-
-> a monorepo for a web app that analyzes images using MobileNet (in-browser) and ChatGPT (Cloudflare Workers)
+# Web Playground
+> a NextJS playground for my small web apps
 
 ## Requirements
 
 - [GNU Make](https://www.gnu.org/software/make)
 - [Nodejs](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/)
 
 ## Usage
 
 To install project dependencies, run the following command:
 ```bash
 make install
-``` 
+```
 
 To start the application, run the following command:
 ```bash
 make start
 ```
 
-To run `e2e` tests, run the following command:
+To run all tests, run the following command:
 ```bash
-make e2e
+make test
 ```
 
 To deploy the application, run the following command:
 ```bash
 make deploy
 ```
+
+## TODOS
+
+- [ ] Migrate [stockjs](https://github.com/tjmaynes/gists/tree/main/javascript/stockjs) app to web-playground
+- [ ] Migrate [tic-tac-toe](https://github.com/tjmaynes/gists/tree/main/javascript/tic-tac-toe) app to web-playground

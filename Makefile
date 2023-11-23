@@ -1,29 +1,29 @@
 install:
-	yarn install
-	cd e2e && make install
-
-dev_api:
-	cd api && make dev
-
-dev_web:
-	cd web && make dev
-
-start_api:
-	cd api && make start
-
-start_web:
-	cd web && make start
-
-start:
-	yarn $@
+	npm install
 
 dev:
-	yarn $@
+	npm run dev
 
-.PHONY: e2e
-e2e:
-	cd e2e && make test
+.PHONY: build
+build:
+	npm run build
 
-deploy: install e2e
-	cd api && make $@
-	cd web && make $@
+start: build
+	npm run start
+
+lint:
+	npm run lint
+
+lint_fix:
+	npm run lint:fix
+
+performance:
+	chmod +x ./script/$@.sh
+	./script/$@.sh "3000"
+
+test: lint build
+
+deploy: install test
+
+clean:
+	rm -rf node_modules/ .next/

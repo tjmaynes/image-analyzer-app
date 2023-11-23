@@ -1,5 +1,0 @@
-{
-  "preset": "ts-jest",
-  "testEnvironment": "miniflare",
-  "testMatch": ["**/src/**/(*.)+(spec|test).+(ts|tsx)"]
-}
