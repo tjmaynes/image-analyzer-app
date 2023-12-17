@@ -1,4 +1,4 @@
-import { useImageAnalyzer } from '@/app/image-analyzer/_hooks/useImageAnalyzer'
+import { useImageAnalyzer } from '@/app/_hooks/useImageAnalyzer'
 import { ImageMetadata } from '@/app/image-analyzer/types'
 
 const ImageDescription = ({

@@ -24,6 +24,7 @@ performance:
 test: lint build
 
 deploy: install test
+	npm run pages:deploy
 
 clean:
 	rm -rf node_modules/ .next/

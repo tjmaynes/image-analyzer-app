@@ -1,6 +1,6 @@
 'use client'
 
-import { useImageRender as useImageRenderer } from '@/app/image-analyzer/_hooks/useImageRender'
+import { useImageRender as useImageRenderer } from '@/app/_hooks/useImageRender'
 import { useEffect } from 'react'
 
 type ImageCanvasProps = {

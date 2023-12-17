@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { useImageUploadInfoFetcher } from '@/app/image-analyzer/_hooks/useImageUploadInfoFetcher'
+import { useImageUploadInfoFetcher } from '@/app/_hooks/useImageUploadInfoFetcher'
 import ImageAnalyzer from './ImageAnalyzer'
 
 const SampleImagePreview = memo(({ imageSource }: { imageSource: string }) => {

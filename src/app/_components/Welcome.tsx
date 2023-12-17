@@ -1,6 +1,5 @@
 const Welcome = () => (
   <div>
-    <h1>Image Analyzer</h1>
     <h2>Background</h2>
     <p>
       <strong>Image Analyzer</strong> is a proof-of-concept web application that

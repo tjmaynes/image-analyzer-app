@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, ChangeEvent, useCallback, DragEvent } from 'react'
-import ErrorContainer from '../../_components/ErrorContainer'
+import ErrorContainer from './ErrorContainer'
 import { ImageUploadInfo } from '@/app/image-analyzer/types'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'

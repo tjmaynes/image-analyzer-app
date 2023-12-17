@@ -1,5 +1,5 @@
-# Web Playground
-> a NextJS playground for my small web apps
+# image-analyzer-app
+> a NextJS application for analyzing images
 
 ## Requirements
 
