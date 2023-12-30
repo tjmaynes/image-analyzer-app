@@ -1,5 +1,5 @@
 # image-analyzer-app
-> a NextJS application for analyzing images
+> a NextJS app that allows users to analyze images using MobileNet (via TensorflowJS), ChatGPT, and Cloudflare Pages
 
 ## Requirements
 
@@ -27,8 +27,3 @@ To deploy the application, run the following command:
 ```bash
 make deploy
 ```
-
-## TODOS
-
-- [ ] Migrate [stockjs](https://github.com/tjmaynes/gists/tree/main/javascript/stockjs) app to web-playground
-- [ ] Migrate [tic-tac-toe](https://github.com/tjmaynes/gists/tree/main/javascript/tic-tac-toe) app to web-playground

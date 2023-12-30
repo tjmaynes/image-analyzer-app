@@ -13,12 +13,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: 🚀 Deploy 🚀
-        run: make deploy
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          node-version-file: '.node-version'
+      - name: 🔨 Install Dependencies 🔨
+        run: sudo apt-get update && sudo apt-get install make
+      # - name: 🚀 Deploy 🚀
+      #   run: make deploy
+      #   env:
+      #     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

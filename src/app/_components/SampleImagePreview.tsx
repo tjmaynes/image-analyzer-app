@@ -7,7 +7,7 @@ const SampleImagePreview = memo(({ imageSource }: { imageSource: string }) => {
 
   return (
     <div>
-      <h1>Sample Analysis</h1>
+      <h2>Sample Analysis</h2>
       {imageUploadInfo && <ImageAnalyzer {...imageUploadInfo} />}
     </div>
   )

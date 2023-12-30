@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
-import Container from '@mui/material/Container'
 import Header from '@/app/_components/Header'
 import Footer from '@/app/_components/Footer'
-import './globals.css'
+import './globals.scss'
 
 export const metadata: Metadata = {
-  title: 'Web Playground',
+  title: 'Image Analyzer',
   description:
-    'A NextJS app that allows users to analyze images using MobileNet (in-browser), ChatGPT, and Cloudflare Workers',
+    'a NextJS app that allows users to analyze images using MobileNet (via TensorflowJS), ChatGPT, and Cloudflare Pages',
 }
 
 export default function RootLayout({
@@ -19,11 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <main>
-          <Container>
-            <Header />
-            {children}
-            <Footer />
-          </Container>
+          <Header />
+          {children}
+          <Footer />
         </main>
       </body>
     </html>

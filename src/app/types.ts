@@ -9,11 +9,12 @@ export type ImageMetadata = ImageUploadInfo & {
 
 export type Prediction = { className: string; probability: number }
 
-export type ClassificationData = {
+export type Classification = {
+  top: string
   predictions: Prediction[]
 }
 
 export type ImageClassificationData = ImageMetadata &
-  ClassificationData & {
+  Classification & {
     background: string
   }

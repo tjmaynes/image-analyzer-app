@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 import ImageUploader from '@/app/_components/ImageUploader'
 import SampleImagePreview from '@/app/_components/SampleImagePreview'
-import Welcome from '@/app/_components/Welcome'
+import BackgroundInfo from '@/app/_components/BackgroundInfo'
 import ImageAnalyzer from '@/app/_components/ImageAnalyzer'
 import { ImageUploadInfo } from '@/app/types'
 
@@ -19,9 +19,8 @@ const ImageAnalyzerRoot = () => {
 
   return (
     <main>
-      <Welcome />
-      <div>
-        <h1>Try it out</h1>
+      <div className="welcome">
+        <BackgroundInfo />
         <ImageUploader onUpload={processFiles} />
       </div>
       {images.length <= 0 && (
@@ -29,7 +28,7 @@ const ImageAnalyzerRoot = () => {
       )}
       {images.length > 0 && (
         <div>
-          <h1>Analysis Results</h1>
+          <h2>Analysis Results</h2>
           {images.map((data, index) => (
             <ImageAnalyzer key={index} {...data} />
           ))}

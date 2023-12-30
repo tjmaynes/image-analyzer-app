@@ -1,0 +1,122 @@
+/* stylelint-disable */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+/* stylelint-enable */
+
+body {
+  padding: 10px;
+  font:
+    16px/1.5 'Inconsolata',
+    'Lucida Sans Typewriter',
+    'Lucida Console',
+    Monaco,
+    monospace;
+  color: #000;
+  background-color: #fbfbfb;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+body > * {
+  padding: 0px;
+  margin: 0px;
+  font-size: 100%;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  // text-decoration: underline;
+}
+
+canvas {
+  margin: 5px 5px 10px 5px;
+  max-width: 500px;
+  max-height: 500px;
+  -moz-box-shadow: 0 0 3px 3px #d81b60;
+  -webkit-box-shadow: 0 0 3px 3px #d81b60;
+  box-shadow: 0 0 3px 3px #d81b60;
+}
+
+.welcome {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 5px 0 30px 0;
+}
+
+.background-info {
+  margin-bottom: 20px;
+}
+
+.image-uploader {
+  height: 16rem;
+  max-width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+#input-file-upload {
+  display: none;
+}
+
+#label-file-upload {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 2px;
+  border: 8px dashed #d81b60;
+  border-radius: 24px;
+
+  p:first-child {
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+}
+
+#label-file-upload.drag-active {
+  background-color: #ffffff;
+}
+
+.upload-button {
+  margin-bottom: 0;
+}
+
+.upload-button:hover {
+  text-decoration-line: underline;
+}
+
+#drag-file-element {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}

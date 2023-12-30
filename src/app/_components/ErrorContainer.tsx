@@ -1,5 +1,5 @@
 const ErrorContainer = ({ errors }: { errors: string[] }) => (
-  <div className="error-container">
+  <div>
     {errors.length === 1 && <p>Failed: {errors[0]} </p>}
     {errors.length > 0 && (
       <div>

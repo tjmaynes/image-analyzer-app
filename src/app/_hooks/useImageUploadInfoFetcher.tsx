@@ -1,6 +1,6 @@
 'use client'
 
-import { ImageUploadInfo } from '@/app/image-analyzer/types'
+import { ImageUploadInfo } from '@/app/types'
 import { useEffect, useState } from 'react'
 
 export const useImageUploadInfoFetcher = (imageSource: string) => {

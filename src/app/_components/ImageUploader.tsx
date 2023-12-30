@@ -2,9 +2,7 @@
 
 import { useState, useRef, ChangeEvent, useCallback, DragEvent } from 'react'
 import ErrorContainer from './ErrorContainer'
-import { ImageUploadInfo } from '@/app/image-analyzer/types'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
+import { ImageUploadInfo } from '@/app/types'
 
 const imageMimeType = /image\/(png|jpg|jpeg|webp)/i
 
@@ -80,9 +78,9 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   }
 
   return (
-    <Container>
+    <>
       <form
-        id="form-file-upload"
+        className="image-uploader"
         onDragEnter={handleDrag}
         onSubmit={(e) => e.preventDefault()}
       >
@@ -98,14 +96,12 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
           <div>
             <p>Drag images for analysis</p>
             <p>or</p>
-            <Button
-              variant="contained"
+            <button
               aria-busy={isLoading ? 'true' : 'false'}
-              className="upload-button"
               onClick={onButtonClick}
             >
-              Tap to analyze images
-            </Button>
+              Tap to upload images for analysis
+            </button>
           </div>
         </label>
         {dragActive && (
@@ -123,7 +119,7 @@ const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
           errors={['Unable to upload non-png|jpg|jpeg|webp file.']}
         />
       )}
-    </Container>
+    </>
   )
 }
 

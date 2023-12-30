@@ -1,8 +1,8 @@
-import Link from 'next/link'
-
 const Header = () => (
   <header>
-    <h1>Image Analyzer</h1>
+    <h1>
+      🖼️ <a href="/">Image Analyzer</a> 🔎
+    </h1>
   </header>
 )
 
