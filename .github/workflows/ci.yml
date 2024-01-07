@@ -18,9 +18,8 @@ jobs:
           node-version-file: '.node-version'
       - name: 🔨 Install Dependencies 🔨
         run: sudo apt-get update && sudo apt-get install make
-      # - name: 🚀 Deploy 🚀
-      #   run: make deploy
-      #   env:
-      #     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: 🚀 Deploy 🚀
+        run: make deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

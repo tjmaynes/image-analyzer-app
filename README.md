@@ -27,3 +27,8 @@ To deploy the application, run the following command:
 ```bash
 make deploy
 ```
+
+To seed the database, run the following command:
+```bash
+make seed
+```

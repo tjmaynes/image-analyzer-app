@@ -42,6 +42,11 @@ deploy_cloudflare_page:
 
 deploy: install build ensure_cloudflare_infra_exists deploy_cloudflare_page
 
+seed:
+	node ./script/seed.js \
+		--cloudflare-kv-binding-id "5df82e748f494385a2aeaf2912cbb359" \
+		--seed-file "./data/seed.json"
+
 clean:
 	rm -rf .next/ .vercel/ build/
 

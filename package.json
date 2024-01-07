@@ -20,7 +20,6 @@
     "@tensorflow-models/mobilenet": "^2.1.1",
     "@tensorflow/tfjs": "^4.13.0",
     "next": "^14.0.3",
-    "openai": "^4.19.1",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -37,6 +36,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-next-on-pages": "^1.8.2",
     "eslint-plugin-prettier": "^5.0.1",
+    "openai": "^4.24.1",
     "prettier": "^3.1.1",
     "sass": "^1.69.6",
     "sharp": "^0.32.6",
