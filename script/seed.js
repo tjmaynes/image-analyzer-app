@@ -68,6 +68,7 @@ const batchSeedProcess = async (
     )
   }
 
+  // or: currentSeedFileContent.data.length
   const totalBatchJobs = imageClasses.length / limitBatchSize
 
   let latestSeedFileContent = currentSeedFileContent
