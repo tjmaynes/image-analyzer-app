@@ -14,7 +14,7 @@
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:deploy": "wrangler pages deploy .vercel/output/static --project-name='image-analyzer-app'",
     "pages:watch": "next-on-pages --watch",
-    "pages:dev": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2023-10-30 --compatibility-flag=nodejs_compat --kv IMAGE_ANALYZER_KV"
+    "pages:dev": "npm run pages:build && wrangler pages dev .vercel/output/static --compatibility-date=2023-10-30 --compatibility-flag=nodejs_compat"
   },
   "dependencies": {
     "@tensorflow-models/mobilenet": "^2.1.1",

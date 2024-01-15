@@ -1,23 +1,14 @@
 import 'server-only'
 
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  CacheClient,
-  InMemoryCacheClient,
-  KVCacheClient,
-} from '@/lib/cache-client'
+import seedData from '@/data/seed.json'
+
+const imageDescriptionData = seedData.data.reduce<Record<string, string>>(
+  (accum, curr) => ({ ...accum, ...{ [curr.name]: curr.description } }),
+  {}
+)
 
 export const runtime = 'edge'
-
-const createCacheClient = (): CacheClient => {
-  if (process.env.NODE_ENV === 'development') return new InMemoryCacheClient()
-
-  const IMAGE_ANALYZER_KV = process.env.IMAGE_ANALYZER_KV
-
-  return new KVCacheClient(IMAGE_ANALYZER_KV)
-}
-
-const cacheClient = createCacheClient()
 
 export async function GET(request: NextRequest) {
   const thing = request.nextUrl.searchParams.get('thing')
@@ -28,12 +19,12 @@ export async function GET(request: NextRequest) {
       status: 422,
     })
 
-  const response = await cacheClient.get(thing)
+  const response = imageDescriptionData[thing]
 
   return response
     ? NextResponse.json({ message: response, status: 200 })
     : NextResponse.json({
-        message: `Unable to find a description for ${thing}...`,
+        message: `Unable to find a description for "${thing}"...`,
         status: 404,
       })
 }

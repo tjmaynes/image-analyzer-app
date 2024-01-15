@@ -1,5 +1,4 @@
 const fs = require('fs/promises')
-const { execSync } = require('child_process')
 const OpenAI = require('openai')
 const imageClasses = require('./image-classes.json')
 
@@ -10,30 +9,23 @@ const throwIfEnvVarDoesNotExist = (envVarName) => {
   }
 }
 
-const cleanDescription = (description) =>
-  description.replace(/\"/g, "'").replace(/(\r\n|\n|\r)/gm, ' ')
+const getFlagValue = (flagName) => {
+  const flagIndex = process.argv.indexOf(`--${flagName}`)
+  const flagValue = flagIndex > -1 ? process.argv[flagIndex + 1] : ''
 
-const addKeyValueToCloudflareKV = (cloudflareKVBindingId, key, value) => {
-  console.log(
-    `Attempting to add key "${key}" to Cloudflare KV: '${cloudflareKVBindingId}'`
-  )
+  if (!flagValue) {
+    console.error(
+      `Expected required flag '--${flagName}' to be passed to script!`
+    )
+    process.exit(1)
+  }
 
-  execSync(
-    `bash ./script/cloudflare/add-cloudflare-kv-value.sh "${cloudflareKVBindingId}" "${key}" "${value}"`,
-    (err, output) => {
-      if (err) {
-        console.error('could not execute command: ', err)
-        return
-      }
-      console.log('Output: \n', output)
-    }
-  )
+  return flagValue
 }
 
 const batchSeedProcess = async (
   currentSeedFileContent,
   seedFile,
-  cloudflareKVBindingId,
   limitBatchSize = 5
 ) => {
   const currentClassifications = imageClasses.slice(
@@ -103,14 +95,6 @@ const batchSeedProcess = async (
       flag: 'w',
     })
 
-    newSeedData.forEach(({ name, description }) => {
-      addKeyValueToCloudflareKV(
-        cloudflareKVBindingId,
-        name,
-        cleanDescription(description)
-      )
-    })
-
     latestSeedFileContent = newSeedFileContent
   }
 
@@ -139,20 +123,6 @@ const ensureSeedFileExists = (seedFile, onSeedFileConfirmation) =>
       }
     })
 
-const getFlag = (flagName) => {
-  const flagIndex = process.argv.indexOf(`--${flagName}`)
-  const flagValue = flagIndex > -1 ? process.argv[flagIndex + 1] : ''
-
-  if (!flagValue) {
-    console.error(
-      `Expected required flag '--${flagName}' to be passed to script!`
-    )
-    process.exit(1)
-  }
-
-  return flagValue
-}
-
 const main = async () => {
   ;['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'OPENAI_API_KEY'].forEach(
     (envVarName) => throwIfEnvVarDoesNotExist(envVarName)
@@ -163,26 +133,13 @@ const main = async () => {
     process.exit(1)
   }
 
-  const [seedFile, cloudflareKVBindingId] = [
-    getFlag('seed-file'),
-    getFlag('cloudflare-kv-binding-id'),
-  ]
+  const [seedFile] = [getFlagValue('seed-file')]
 
-  const updatedSeedData = await ensureSeedFileExists(
-    seedFile,
-    (currentSeedData) =>
-      currentSeedData.data.length !== imageClasses.length
-        ? batchSeedProcess(currentSeedData, seedFile, cloudflareKVBindingId, 5)
-        : currentSeedData
+  return await ensureSeedFileExists(seedFile, (currentSeedData) =>
+    currentSeedData.data.length !== imageClasses.length
+      ? batchSeedProcess(currentSeedData, seedFile, 5)
+      : currentSeedData
   )
-
-  updatedSeedData.data.forEach(({ name, description }) => {
-    addKeyValueToCloudflareKV(
-      cloudflareKVBindingId,
-      name,
-      cleanDescription(description)
-    )
-  })
 }
 
 main().then(() => console.log('Done!'))
