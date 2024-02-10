@@ -8,13 +8,11 @@ export const resizeImage = ({
   imageHeight: number
   maxWidth: number
   maxHeight: number
-}) => {
-  if (imageWidth > imageHeight) {
-    if (imageWidth > maxWidth) {
-      return {
-        width: maxWidth,
-        height: imageHeight * (maxWidth / imageWidth),
-      }
+}): { width: number; height: number } => {
+  if (imageWidth > imageHeight && imageWidth > maxWidth) {
+    return {
+      width: maxWidth,
+      height: imageHeight * (maxWidth / imageWidth),
     }
   } else if (imageHeight > maxHeight) {
     return {

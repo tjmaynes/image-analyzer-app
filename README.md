@@ -1,5 +1,5 @@
 # image-analyzer-app
-> a NextJS app that allows users to analyze images using MobileNet (via TensorflowJS), image descriptions from ChatGPT, and hosted on Cloudflare Pages
+> a NextJS app for analyzing images using MobileNet (via TensorflowJS). Image descriptions generated from ChatGPT and hosted on Cloudflare Pages.
 
 ## Requirements
 
