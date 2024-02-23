@@ -24,33 +24,31 @@ export const useImageRender = (
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const context = canvasRef.current?.getContext('2d', {
-      willReadFrequently: true,
-    })
-
+    const context = canvas.getContext('2d', { willReadFrequently: true })
     if (!context) return
 
-    createImageBitmap(imageBlob).then((imageBitmap) => {
-      const options = {
-        imageHeight: imageBitmap.height,
-        imageWidth: imageBitmap.width,
-        maxHeight,
-        maxWidth,
-      }
+    createImageBitmap(imageBlob)
+      .then((imageBitmap) => {
+        const { width, height } = resizeImage({
+          imageHeight: imageBitmap.height,
+          imageWidth: imageBitmap.width,
+          maxHeight,
+          maxWidth,
+        })
 
-      const { width, height } = resizeImage(options)
+        context.canvas.width = width
+        context.canvas.height = height
+        context.drawImage(imageBitmap, 0, 0, width, height)
 
-      context.canvas.width = width
-      context.canvas.height = height
-
-      context.drawImage(imageBitmap, 0, 0, width, height)
-
-      setImageRenderState({
-        isLoading: false,
-        imageData: context.getImageData(0, 0, width, height),
+        setImageRenderState({
+          isLoading: false,
+          imageData: context.getImageData(0, 0, width, height),
+        })
       })
-    })
-  }, [canvasRef, maxWidth, maxHeight, imageBlob])
+      .catch((error) => {
+        console.error('Error loading image:', error)
+      })
+  }, [maxWidth, maxHeight, imageBlob])
 
   return { imageRenderState, canvasRef }
 }
