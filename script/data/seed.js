@@ -42,7 +42,7 @@ const batchSeedProcess = async (
       const response = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         stream: false,
-        messages: [{ role: 'system', content: content }],
+        messages: [{ role: 'user', content: content }],
       })
 
       if (response && response.choices && response.choices.length > 0) {
