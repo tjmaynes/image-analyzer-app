@@ -21,13 +21,24 @@ test.describe('when a user navigates to the homepage', () => {
     await expect(page).toHaveURL('https://tjmaynes.com/')
   })
 
-  test.skip('shows an image description for a dog', async ({ page }) => {
-    await expect(page.getByText('Labrador Retriever: 76%')).toBeVisible()
-    await expect(page.getByText('Flat-coated Retriever: 8%')).toBeVisible()
+  test('shows an image description for a dog', async ({ page }) => {
+    await expect(page.getByText(/^Labrador Retriever: ([0-9]+)%$/)).toBeVisible(
+      {
+        timeout: 30000,
+      }
+    )
+    await expect(
+      page.getByText(/^Flat-coated Retriever: ([0-9]+)%$/)
+    ).toBeVisible({
+      timeout: 30000,
+    })
+
     await expect(
       page.getByText(
-        'Staffordshire Bullterrier, Staffordshire Bull Terrier: 6%'
+        /^Staffordshire Bullterrier, Staffordshire Bull Terrier: ([0-9]+)%$/
       )
-    ).toBeVisible()
+    ).toBeVisible({
+      timeout: 30000,
+    })
   })
 })

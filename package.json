@@ -10,7 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
-    "test": "npx playwright test"
+    "test:e2e": "npx playwright test",
+    "test:e2e:report": "npx playwright show-report"
   },
   "dependencies": {
     "@tensorflow-models/mobilenet": "^2.1.1",

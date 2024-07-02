@@ -5,8 +5,13 @@ install:
 dev:
 	npm run dev
 
-test:
-	npm test
+test_e2e:
+	npm run test:e2e
+
+test_e2e_report:
+	npm run test:e2e:report
+
+test: test_e2e
 
 build:
 	npm run build
