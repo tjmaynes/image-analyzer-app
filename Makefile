@@ -1,45 +1,38 @@
 install:
-	npm install
+	npm ci
+	npx playwright install --with-deps
 
 dev:
 	npm run dev
 
-dev_cloudflare:
-	npm run pages:dev
+test:
+	npm test
 
-build: clean
-	npm run pages:build
-
-start:
-	npm run start
+build:
+	npm run build
 
 lint:
 	npm run lint
 
-lint_fix:
-	npm run lint:fix
+format:
+	npm run format
 
-performance:
-	npm run lighthouse
+start:
+	npm run start
 
-test: performance
-
-ensure_cloudflare_page_exists:
-	chmod +x ./script/cloudflare/ensure-cloudflare-pages-exists.sh
-	./script/cloudflare/ensure-cloudflare-pages-exists.sh "image-analyzer-app"
-
-deploy_cloudflare_page:
-	npm run pages:deploy
-
-deploy: install build ensure_cloudflare_page_exists deploy_cloudflare_page
+ship_it: lint build test
+	git push
 
 seed:
-	node ./script/data/seed.js --seed-file "./src/data/seed.json"
+	node ./scripts/data/seed.js --seed-file "./src/data/db.json"
 
-clean:
-	rm -rf .next/ .vercel/ build/
+ensure_cloudflare_page_exists:
+	chmod +x ./scripts/cloudflare/ensure-cloudflare-pages-exists.sh
+	./scripts/cloudflare/ensure-cloudflare-pages-exists.sh "image-analyzer-app"
 
-define add_cloudflare_secret
-	chmod +x ./script/cloudflare/ensure-cloudflare-secret-exists.sh
-	./script/cloudflare/ensure-cloudflare-secret-exists.sh "$(1)" "$(2)" "$(3)"
-endef
+deploy_cloudflare_page:
+	chmod +x ./scripts/cloudflare/cloudflare-page-deploy.sh
+	./scripts/cloudflare/cloudflare-page-deploy.sh "image-analyzer-app" "dist"
+
+#deploy: install build test ensure_cloudflare_page_exists deploy_cloudflare_page
+deploy: install build test ensure_cloudflare_page_exists
