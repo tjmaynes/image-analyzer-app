@@ -10,21 +10,20 @@ export const ImageAnalysis = ({ imageId, imageBlob }: ImageUploadInfo) => {
     null
   )
 
-  const handleOnImageRender = useCallback(
+  const onImageRenderCallback = useCallback(
     (imageData: ImageData) => {
       if (!imageMetadata) {
-        const newImageMetadata = {
+        setImageMetadata({
           imageId,
           imageBlob,
           imageData,
-        }
-        setImageMetadata(newImageMetadata)
+        })
       }
     },
     [imageId, imageBlob, imageMetadata, setImageMetadata]
   )
 
-  const handleOnImageClassification = useCallback(
+  const onImageClassificationCallback = useCallback(
     (classification: string) => {
       if (!imageClassification) {
         setImageClassification(classification)
@@ -34,24 +33,26 @@ export const ImageAnalysis = ({ imageId, imageBlob }: ImageUploadInfo) => {
   )
 
   return (
-    <div>
+    <section className="flex flex-col md:flex-row p-6 justify-between">
       <ImageCanvas
         maxWidth={500}
         maxHeight={500}
         imageBlob={imageBlob}
-        onRender={handleOnImageRender}
+        onRender={onImageRenderCallback}
       />
-      <h2>Results</h2>
-      {imageMetadata && (
-        <ImageClassification
-          imageMetadata={imageMetadata}
-          onClassification={handleOnImageClassification}
-        />
-      )}
-      {imageClassification && (
-        <ImageDescription classification={imageClassification} />
-      )}
-    </div>
+      <section className="flex flex-col mt-4 md:ml-6 sm:mt-0">
+        <h2 className="text-2xl font-bold">Results</h2>
+        {imageMetadata && (
+          <ImageClassification
+            imageMetadata={imageMetadata}
+            onClassification={onImageClassificationCallback}
+          />
+        )}
+        {imageClassification && (
+          <ImageDescription classification={imageClassification} />
+        )}
+      </section>
+    </section>
   )
 }
 
@@ -116,7 +117,7 @@ const ImageDescription = ({ classification }: { classification: string }) => {
   const { imageDescriptionResult } = useImageDescriptionService(classification)
 
   return (
-    <>
+    <div className="pt-3 text-base">
       {imageDescriptionResult.state === 'LOADING' && <progress></progress>}
       {imageDescriptionResult.state === 'FINISHED' && (
         <p aria-labelledby="background-info">
@@ -128,6 +129,6 @@ const ImageDescription = ({ classification }: { classification: string }) => {
           An error occurred: {imageDescriptionResult.message}
         </p>
       )}
-    </>
+    </div>
   )
 }

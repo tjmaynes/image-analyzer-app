@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import { ImageUploadInfo } from '../types.ts'
 import { ImageUploader } from './ImageUploader.tsx'
-import { SampleImagePreview } from './SampleImagePreview.tsx'
 import { ImageAnalysis } from './ImageAnalysis.tsx'
+import { useImageAnalyzer } from '../hooks/useImageAnalyzer.tsx'
 
 const ImageAnalyzer = () => {
-  const [images, setImages] = useState<ImageUploadInfo[]>([])
+  const { images, setImages } = useImageAnalyzer('/images/sample.jpg')
 
   const processFiles = (images: ImageUploadInfo[]) => {
     if (images.length > 0) setImages(images)
@@ -13,20 +12,10 @@ const ImageAnalyzer = () => {
 
   return (
     <main>
+      {images.map((data) => (
+        <ImageAnalysis key={data.imageId} {...data} />
+      ))}
       <ImageUploader onUpload={(images) => processFiles(images)} />
-      <div>
-        {images.length <= 0 && (
-          <SampleImagePreview imageSource="/images/sample.jpg" />
-        )}
-        {images.length > 0 && (
-          <>
-            <h2>Analysis Results</h2>
-            {images.map((data, index) => (
-              <ImageAnalysis key={index} {...data} />
-            ))}
-          </>
-        )}
-      </div>
     </main>
   )
 }

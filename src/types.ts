@@ -13,8 +13,3 @@ export type Classification = {
   top: string
   predictions: Prediction[]
 }
-
-export type ImageClassificationData = ImageMetadata &
-  Classification & {
-    background: string
-  }

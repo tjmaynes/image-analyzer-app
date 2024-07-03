@@ -1,5 +1,5 @@
 # image-analyzer-app
-> a simple web app for analyzing images using MobileNet (via TensorflowJS) and hosted on Cloudflare Pages
+> a simple web app for analyzing images using MobileNet
 
 ## Requirements
 

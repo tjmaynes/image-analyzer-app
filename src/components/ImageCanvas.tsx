@@ -27,7 +27,7 @@ export const ImageCanvas = ({
   return (
     <>
       {imageRenderState.isLoading && <progress></progress>}
-      <canvas ref={canvasRef} />
+      <canvas className="border-8 border-amber-400" ref={canvasRef} />
     </>
   )
 }

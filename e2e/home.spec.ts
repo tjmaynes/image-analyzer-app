@@ -25,8 +25,6 @@ test.describe('when a user navigates to the homepage', () => {
   test('shows the correct classification for a beautiful dog', async ({
     page,
   }) => {
-    await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
-
     await expect(page.getByText(/^Labrador Retriever: ([0-9]+)%$/)).toBeVisible(
       {
         timeout: 30000,
@@ -50,13 +48,13 @@ test.describe('when a user navigates to the homepage', () => {
 
   test.describe('and when they upload an image of a snake', () => {
     test.beforeEach(async ({ page }) => {
+      await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
+
       await page.locator('input[name="image-upload"]').click()
 
       await page
         .locator('input[name="image-upload"]')
         .setInputFiles('./e2e/images/snake.jpg')
-
-      await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
     })
 
     test('shows the correct classification for a snake', async ({ page }) => {
