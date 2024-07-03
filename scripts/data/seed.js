@@ -1,6 +1,6 @@
-const fs = require('fs/promises')
-const OpenAI = require('openai')
-const imageClasses = require('./image-classes.json')
+import fs from 'fs/promises'
+import OpenAI from 'openai'
+import imageClasses from './image-classes.json'
 
 const throwIfEnvVarDoesNotExist = (envVarName) => {
   if (!process.env[envVarName]) {

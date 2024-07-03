@@ -76,31 +76,29 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   }
 
   return (
-    <>
-      <form
-        className="image-uploader"
-        onDragEnter={handleDrag}
-        onSubmit={(e) => e.preventDefault()}
-      >
+    <div className="flex justify-center mt-10">
+      <form onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
         <input
           ref={inputRef}
           type="file"
           accept="image/*"
-          id="input-file-upload"
+          id="image-upload"
+          name="image-upload"
           multiple={true}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e)}
         />
-        <label id="label-file-upload" htmlFor="input-file-upload">
-          <div>
-            <p>Drag images for analysis</p>
-            <p>or</p>
-            <button
-              aria-busy={isLoading ? 'true' : 'false'}
-              onClick={onButtonClick}
-            >
-              Tap to upload images for analysis
-            </button>
-          </div>
+        <label
+          htmlFor="image-upload"
+          className="flex justify-center w-full h-32 px-4 transition border-4 border-blue-500 border-dashed rounded-md appearance-none cursor-pointer hover:border-blue-600 focus:outline-none"
+        >
+          <span>Drop images for analysis</span>
+          <span>or</span>
+          <button
+            aria-busy={isLoading ? 'true' : 'false'}
+            onClick={() => onButtonClick()}
+          >
+            Choose images for analysis
+          </button>
         </label>
         {dragActive && (
           <div
@@ -117,6 +115,6 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
           errors={['Unable to upload non-png|jpg|jpeg|webp file.']}
         />
       )}
-    </>
+    </div>
   )
 }

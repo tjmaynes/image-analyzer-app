@@ -1,14 +1,16 @@
 {
   "name": "image-analyzer-web",
+  "description": "a simple web app for analyzing images using MobileNet (via TensorflowJS) and hosted on Cloudflare Pages",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "start": "npm run build && npx http-server dist/ --port=3000",
+    "start:server": "npx http-server --port=3000 dist/",
+    "start": "npm run build && npm run start:server",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "format": "eslint . --ext ts,tsx --fix",
+    "format": "eslint . --ext ts,tsx,js --fix",
     "preview": "vite preview",
     "test:e2e": "npx playwright test",
     "test:e2e:report": "npx playwright show-report"
