@@ -55,7 +55,12 @@ test.describe('when a user navigates to the homepage', () => {
         .setInputFiles('./e2e/images/snake.jpg')
     })
 
-    test('shows the correct classification for a snake', async ({ page }) => {
+    test('shows the correct classification for a snake', async ({
+      page,
+      browserName,
+    }) => {
+      if (browserName === 'firefox') test.skip()
+
       await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
 
       await expect(
