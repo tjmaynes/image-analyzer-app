@@ -17,7 +17,7 @@ export const ImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
         onRender={onImageRenderCallback}
       />
       {state.state === ImageAnalysisStates.FINISHED ? (
-        <section className="flex flex-col justify-start mt-4 md:ml-6 sm:mt-0">
+        <section className="flex flex-col justify-start mt-4 md:ml-6 md:mt-0">
           <h2 className="text-2xl font-bold">Results</h2>
           <ul className="pb-4">
             {state.classification.predictions.map(
