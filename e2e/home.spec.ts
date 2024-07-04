@@ -48,8 +48,6 @@ test.describe('when a user navigates to the homepage', () => {
 
   test.describe('and when they upload an image of a snake', () => {
     test.beforeEach(async ({ page }) => {
-      await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
-
       await page.locator('input[name="image-upload"]').click()
 
       await page
@@ -58,6 +56,8 @@ test.describe('when a user navigates to the homepage', () => {
     })
 
     test('shows the correct classification for a snake', async ({ page }) => {
+      await page.evaluate(scroll, { direction: 'down', speed: 'fast' })
+
       await expect(
         page.getByText(/^Indian Cobra, Naja Naja: ([0-9]+)%$/)
       ).toBeVisible({
@@ -72,7 +72,11 @@ test.describe('when a user navigates to the homepage', () => {
         timeout: 30000,
       })
 
-      await expect(page.getByText(/^Screw: ([0-9]+)%$/)).toBeVisible({
+      await expect(
+        page.getByText(
+          /^Horned Viper, Cerastes, Sand Viper, Horned Asp, Cerastes Cornutus: ([0-9]+)%$/
+        )
+      ).toBeVisible({
         timeout: 30000,
       })
     })

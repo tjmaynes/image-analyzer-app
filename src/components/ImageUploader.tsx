@@ -44,7 +44,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   }
 
   return (
-    <div className="flex justify-center">
+    <>
       <form
         className="flex justify-center"
         onSubmit={(e) => e.preventDefault()}
@@ -64,6 +64,6 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
           errors={['Unable to upload non-png|jpg|jpeg|webp file.']}
         />
       )}
-    </div>
+    </>
   )
 }

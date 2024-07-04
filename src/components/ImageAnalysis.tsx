@@ -1,134 +1,64 @@
-import { useCallback, useEffect, useState } from 'react'
 import { ImageCanvas } from './ImageCanvas'
-import { ImageMetadata, ImageUploadInfo } from '../types'
-import { useImageClassificationService } from '../hooks/useImageClassificationService'
-import { useImageDescriptionService } from '../hooks/useImageDescriptionService'
+import { ImageUploadInfo } from '../types'
+import {
+  ImageAnalysisStates,
+  useImageAnalysis,
+} from '../hooks/useImageAnalysis.tsx'
 
-export const ImageAnalysis = ({ imageId, imageBlob }: ImageUploadInfo) => {
-  const [imageMetadata, setImageMetadata] = useState<ImageMetadata | null>(null)
-  const [imageClassification, setImageClassification] = useState<string | null>(
-    null
-  )
-
-  const onImageRenderCallback = useCallback(
-    (imageData: ImageData) => {
-      if (!imageMetadata) {
-        setImageMetadata({
-          imageId,
-          imageBlob,
-          imageData,
-        })
-      }
-    },
-    [imageId, imageBlob, imageMetadata, setImageMetadata]
-  )
-
-  const onImageClassificationCallback = useCallback(
-    (classification: string) => {
-      if (!imageClassification) {
-        setImageClassification(classification)
-      }
-    },
-    [imageClassification, setImageClassification]
-  )
+export const ImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
+  const { state, onImageRenderCallback } = useImageAnalysis(imageUploadInfo)
 
   return (
-    <section className="flex flex-col md:flex-row p-6 justify-between">
+    <section className="flex flex-col md:flex-row py-6 first:pt-6">
       <ImageCanvas
-        maxWidth={500}
-        maxHeight={500}
-        imageBlob={imageBlob}
+        maxWidth={400}
+        maxHeight={400}
+        imageBlob={imageUploadInfo.imageBlob}
         onRender={onImageRenderCallback}
       />
-      <section className="flex flex-col mt-4 md:ml-6 sm:mt-0">
-        <h2 className="text-2xl font-bold">Results</h2>
-        {imageMetadata && (
-          <ImageClassification
-            imageMetadata={imageMetadata}
-            onClassification={onImageClassificationCallback}
-          />
-        )}
-        {imageClassification && (
-          <ImageDescription classification={imageClassification} />
-        )}
-      </section>
+      {state.state === ImageAnalysisStates.FINISHED ? (
+        <section className="flex flex-col justify-start mt-4 md:ml-6 sm:mt-0">
+          <h2 className="text-2xl font-bold">Results</h2>
+          <ul className="pb-4">
+            {state.classification.predictions.map(
+              ({ className, probability }, index: number) => (
+                <li key={index}>
+                  {prettyPrintClassName(className)}:{' '}
+                  {prettyPrintPercentage(probability)}
+                </li>
+              )
+            )}
+          </ul>
+          <p className="text-sm" aria-labelledby="background-info">
+            {state.classification.background}
+          </p>
+        </section>
+      ) : (
+        <ProgressBar />
+      )}
+      {state.state === ImageAnalysisStates.ERROR && (
+        <p aria-labelledby="prediction-info">
+          An error occurred: {state.message}
+        </p>
+      )}
     </section>
   )
 }
 
-const ImageClassification = ({
-  imageMetadata,
-  onClassification,
-}: {
-  imageMetadata: ImageMetadata
-  onClassification: (classification: string) => void
-}) => {
-  const { imageClassificationResult } = useImageClassificationService(
-    imageMetadata.imageData
-  )
+const ProgressBar = () => (
+  <div className="flex justify-center w-full mt-8">
+    <progress></progress>
+  </div>
+)
 
-  useEffect(() => {
-    if (imageClassificationResult.state === 'FINISHED_LOADING_CLASSIFICATION') {
-      onClassification(imageClassificationResult.classification.top)
-    }
-  })
+const prettyPrintClassName = (className: string) =>
+  className
+    .split(' ')
+    .map((word) => capitalizeWord(word))
+    .join(' ')
 
-  const prettyPrintClassName = (className: string) =>
-    className
-      .split(' ')
-      .map((word) => capitalizeWord(word))
-      .join(' ')
+const capitalizeWord = (word: string): string =>
+  word.length <= 2 ? word : `${word[0].toUpperCase()}${word.substring(1)}`
 
-  const capitalizeWord = (word: string): string =>
-    word.length <= 2 ? word : `${word[0].toUpperCase()}${word.substring(1)}`
-
-  const prettyPrintPercentage = (probability: number) =>
-    `${(probability * 100).toFixed(0)}%`
-
-  return (
-    <>
-      {imageClassificationResult.state === 'LOADING_MODEL' && (
-        <progress></progress>
-      )}
-      {imageClassificationResult.state ===
-        'FINISHED_LOADING_CLASSIFICATION' && (
-        <ul>
-          {imageClassificationResult.classification.predictions.map(
-            ({ className, probability }, index: number) => (
-              <li key={index}>
-                {prettyPrintClassName(className)}:{' '}
-                {prettyPrintPercentage(probability)}
-              </li>
-            )
-          )}
-        </ul>
-      )}
-      {(imageClassificationResult.state === 'ERROR_LOADING_MODEL' ||
-        imageClassificationResult.state === 'ERROR_LOADING_CLASSIFICATION') && (
-        <p aria-labelledby="prediction-info">
-          An error occurred: {imageClassificationResult.message}
-        </p>
-      )}
-    </>
-  )
-}
-
-const ImageDescription = ({ classification }: { classification: string }) => {
-  const { imageDescriptionResult } = useImageDescriptionService(classification)
-
-  return (
-    <div className="pt-3 text-base">
-      {imageDescriptionResult.state === 'LOADING' && <progress></progress>}
-      {imageDescriptionResult.state === 'FINISHED' && (
-        <p aria-labelledby="background-info">
-          {imageDescriptionResult.description}
-        </p>
-      )}
-      {imageDescriptionResult.state === 'ERROR' && (
-        <p aria-labelledby="background-info">
-          An error occurred: {imageDescriptionResult.message}
-        </p>
-      )}
-    </div>
-  )
-}
+const prettyPrintPercentage = (probability: number) =>
+  `${(probability * 100).toFixed(0)}%`

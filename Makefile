@@ -39,5 +39,4 @@ deploy_cloudflare_page:
 	chmod +x ./scripts/cloudflare/cloudflare-page-deploy.sh
 	./scripts/cloudflare/cloudflare-page-deploy.sh "image-analyzer-app" "dist"
 
-#deploy: install build test ensure_cloudflare_page_exists deploy_cloudflare_page
-deploy: install build test ensure_cloudflare_page_exists
+deploy: install build test ensure_cloudflare_page_exists deploy_cloudflare_page

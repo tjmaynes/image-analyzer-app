@@ -1,7 +1,7 @@
 import ImageAnalyzer from './components/ImageAnalyzer.tsx'
 
 const App = () => (
-  <div className="font-mono grid grid-flow-row min-h-screen bg-amber-200">
+  <div className="text-base font-mono grid grid-flow-row min-h-screen bg-amber-200">
     <header className="text-center pl-0 mt-3 sm:text-left sm:pl-4">
       <a
         href="https://github.com/tjmaynes/image-analyzer-app"
@@ -10,7 +10,9 @@ const App = () => (
         Image Analyzer
       </a>
     </header>
-    <ImageAnalyzer />
+    <main className="flex flex-col justify-center p-6">
+      <ImageAnalyzer initialImage="/images/sample.jpg" />
+    </main>
     <footer className="pl-0 mb-4 sm:pl-4">
       <p className="text-sm text-center">
         Built for fun & learning by{' '}

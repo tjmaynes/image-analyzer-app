@@ -27,7 +27,10 @@ export const ImageCanvas = ({
   return (
     <>
       {imageRenderState.isLoading && <progress></progress>}
-      <canvas className="border-8 border-amber-400" ref={canvasRef} />
+      <canvas
+        className={`border-8 border-amber-400 rounded-lg min-w-[${maxWidth}]`}
+        ref={canvasRef}
+      />
     </>
   )
 }
