@@ -25,12 +25,12 @@ export const ImageCanvas = ({
   }, [imageRenderState, onRender])
 
   return (
-    <>
+    <div className={`flex justify-center md:block md:min-w-[${maxWidth}]`}>
       {imageRenderState.isLoading && <progress></progress>}
       <canvas
-        className={`border-8 border-amber-400 rounded-lg min-w-screen md:min-w-[${maxWidth}]`}
+        className="border-8 border-amber-400 rounded-lg object-contain"
         ref={canvasRef}
       />
-    </>
+    </div>
   )
 }

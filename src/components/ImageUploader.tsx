@@ -46,7 +46,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
   return (
     <>
       <form
-        className="flex justify-center"
+        className="flex justify-center py-4"
         onSubmit={(e) => e.preventDefault()}
       >
         <input

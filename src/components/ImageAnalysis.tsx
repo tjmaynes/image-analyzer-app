@@ -1,5 +1,5 @@
 import { ImageCanvas } from './ImageCanvas'
-import { ImageUploadInfo } from '../types'
+import { ImageUploadInfo, Prediction } from '../types'
 import {
   ImageAnalysisStates,
   useImageAnalysis,
@@ -9,32 +9,23 @@ export const ImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
   const { state, onImageRenderCallback } = useImageAnalysis(imageUploadInfo)
 
   return (
-    <section className="flex flex-col md:flex-row py-6 first:pt-6">
+    <section className="flex flex-col justify-center md:flex-row py-6 first:pt-6">
       <ImageCanvas
         maxWidth={400}
         maxHeight={400}
         imageBlob={imageUploadInfo.imageBlob}
         onRender={onImageRenderCallback}
       />
-      {state.state === ImageAnalysisStates.FINISHED ? (
-        <section className="flex flex-col justify-start mt-4 md:ml-6 md:mt-0">
-          <h2 className="text-2xl font-bold">Results</h2>
-          <ul className="pb-4">
-            {state.classification.predictions.map(
-              ({ className, probability }, index: number) => (
-                <li key={index}>
-                  {prettyPrintClassName(className)}:{' '}
-                  {prettyPrintPercentage(probability)}
-                </li>
-              )
-            )}
-          </ul>
-          <p className="text-sm" aria-labelledby="background-info">
-            {state.classification.background}
+      {state.state === ImageAnalysisStates.FINISHED && (
+        <section className="flex flex-col md:max-w-[400px] mt-8 md:ml-6 md:mt-0">
+          <h3 className="text-xl font-bold">
+            I'm a {state.classification.topClassification}!
+          </h3>
+          <p className="text-sm py-3">{state.classification.background}</p>
+          <p className="text-sm italic" aria-labelledby="background-info">
+            {getOtherPossibilities(state.classification.predictions.slice(1))}{' '}
           </p>
         </section>
-      ) : (
-        <ProgressBar />
       )}
       {state.state === ImageAnalysisStates.ERROR && (
         <p aria-labelledby="prediction-info">
@@ -45,20 +36,38 @@ export const ImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
   )
 }
 
-const ProgressBar = () => (
-  <div className="flex justify-center w-full mt-8">
-    <progress></progress>
-  </div>
-)
+const getOtherPossibilities = (predictions: Prediction[]): string => {
+  console.log(predictions[0].probability * 100)
+  if (predictions.length > 0 && predictions[0].probability * 100 <= 50)
+    return ''
+
+  return predictions.reduce(
+    (previousValue, currentValue, currentIndex, array) => {
+      const className = prettyPrintClassName(currentValue.className)
+      const probability = prettyPrintProbability(currentValue.probability)
+
+      if (currentIndex === 0)
+        return `${previousValue} a ${probability} probability that I'm a '${className}'`
+      else if (currentIndex === 1 && array.length == 2)
+        return `${previousValue} and a ${probability} probability I'm a '${className}'.`
+      else if (currentIndex < array.length - 1)
+        return `${previousValue}, a ${probability} probability that I'm a '${className}'`
+      else
+        return `${previousValue}, and a ${probability} probability I'm a '${className}'.`
+    },
+    "There's"
+  )
+}
 
 const prettyPrintClassName = (className: string) =>
   className
     .split(' ')
     .map((word) => capitalizeWord(word))
     .join(' ')
+    .split(',')[0]
 
 const capitalizeWord = (word: string): string =>
   word.length <= 2 ? word : `${word[0].toUpperCase()}${word.substring(1)}`
 
-const prettyPrintPercentage = (probability: number) =>
+const prettyPrintProbability = (probability: number) =>
   `${(probability * 100).toFixed(0)}%`

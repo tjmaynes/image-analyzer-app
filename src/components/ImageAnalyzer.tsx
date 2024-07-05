@@ -26,10 +26,10 @@ const ImageAnalyzer = ({ initialImage }: { initialImage: string }) => {
 
   return (
     <>
-      <ImageUploader onUpload={(images) => processFiles(images)} />
       {images.map((data) => (
         <ImageAnalysis key={data.imageId} {...data} />
       ))}
+      <ImageUploader onUpload={(images) => processFiles(images)} />
     </>
   )
 }
