@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.node-version'
+          cache: 'npm'
       - name: 🔨 Install Dependencies 🔨
         run: sudo apt-get update && sudo apt-get install make
       - name: 🚀 Deploy 🚀
