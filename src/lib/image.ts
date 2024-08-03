@@ -16,12 +16,13 @@ const getMobileNet = async (): Promise<MobileNet> => {
 }
 
 export const classifyImage = async (
-  imageMetadata: ImageMetadata
+  imageMetadata: ImageMetadata,
 ): Promise<ImageClassificationData> => {
   const model = await getMobileNet()
 
-  const result: { probability: number; className: string }[] =
-    await model.classify(imageMetadata.imageData)
+  const result: { probability: number; className: string }[] = await model.classify(
+    imageMetadata.imageData,
+  )
 
   const sortedPredictions = Array.from(result)
     .sort((a, b) => b.probability - a.probability)
@@ -29,8 +30,7 @@ export const classifyImage = async (
 
   const topClassification = sortedPredictions[0].className
 
-  const background =
-    db.data.find(({ name }) => name === topClassification)?.description ?? 'N/A'
+  const background = db.data.find(({ name }) => name === topClassification)?.description ?? 'N/A'
 
   return {
     ...imageMetadata,

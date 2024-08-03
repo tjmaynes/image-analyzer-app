@@ -13,9 +13,7 @@ type ImageUploaderProps = {
 }
 
 export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
-  const [uploadError, setUploadError] = useState<ImageUploaderError | null>(
-    null
-  )
+  const [uploadError, setUploadError] = useState<ImageUploaderError | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFiles = useCallback(
@@ -34,7 +32,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
 
       onUpload(images)
     },
-    [onUpload]
+    [onUpload],
   )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,24 +43,19 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
 
   return (
     <>
-      <form
-        className="flex justify-center py-4"
-        onSubmit={(e) => e.preventDefault()}
-      >
+      <form className='flex justify-center py-4' onSubmit={(e) => e.preventDefault()}>
         <input
           ref={inputRef}
-          type="file"
-          accept="image/*"
-          id="image-upload"
-          name="image-upload"
+          type='file'
+          accept='image/*'
+          id='image-upload'
+          name='image-upload'
           multiple={true}
           onChange={(e) => handleChange(e)}
         />
       </form>
       {uploadError && uploadError === ImageUploaderError.InvalidFileType && (
-        <ErrorContainer
-          errors={['Unable to upload non-png|jpg|jpeg|webp file.']}
-        />
+        <ErrorContainer errors={['Unable to upload non-png|jpg|jpeg|webp file.']} />
       )}
     </>
   )

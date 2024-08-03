@@ -5,8 +5,7 @@ export const scroll = async ({
   direction: string
   speed: string
 }) => {
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms))
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
   const scrollHeight = () => document.body.scrollHeight
   const shouldStop = (position: number) =>
     direction === 'down' ? position > scrollHeight() : position < 0

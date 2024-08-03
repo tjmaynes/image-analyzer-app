@@ -8,17 +8,8 @@ type ImageCanvasProps = {
   onRender: (data: ImageData) => void
 }
 
-export const ImageCanvas = ({
-  maxWidth,
-  maxHeight,
-  imageBlob,
-  onRender,
-}: ImageCanvasProps) => {
-  const { canvasRef, imageRenderState } = useImageRenderer(
-    imageBlob,
-    maxWidth,
-    maxHeight
-  )
+export const ImageCanvas = ({ maxWidth, maxHeight, imageBlob, onRender }: ImageCanvasProps) => {
+  const { canvasRef, imageRenderState } = useImageRenderer(imageBlob, maxWidth, maxHeight)
 
   useEffect(() => {
     if (!imageRenderState.isLoading) onRender(imageRenderState.imageData)
@@ -27,10 +18,7 @@ export const ImageCanvas = ({
   return (
     <div className={`flex justify-center md:block md:min-w-[${maxWidth}]`}>
       {imageRenderState.isLoading && <progress></progress>}
-      <canvas
-        className="border-8 border-amber-400 rounded-lg object-contain"
-        ref={canvasRef}
-      />
+      <canvas className='border-8 border-amber-400 rounded-lg object-contain' ref={canvasRef} />
     </div>
   )
 }

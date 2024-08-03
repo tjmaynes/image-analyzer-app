@@ -10,11 +10,7 @@ type ImageRenderState =
       imageData: ImageData
     }
 
-export const useImageRender = (
-  imageBlob: Blob,
-  maxWidth: number,
-  maxHeight: number
-) => {
+export const useImageRender = (imageBlob: Blob, maxWidth: number, maxHeight: number) => {
   const [imageRenderState, setImageRenderState] = useState<ImageRenderState>({
     isLoading: true,
   })

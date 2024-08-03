@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useReducer } from 'react'
-import {
-  ImageClassificationData,
-  ImageMetadata,
-  ImageUploadInfo,
-} from '../types'
+import { ImageClassificationData, ImageMetadata, ImageUploadInfo } from '../types'
 import { classifyImage } from '../lib/image'
 
 enum ImageAnalysisActions {
@@ -70,7 +66,7 @@ export const useImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
           dispatch({
             action: ImageAnalysisActions.ON_ERROR,
             message: error.message,
-          })
+          }),
         )
     }
   }, [state])
@@ -82,7 +78,7 @@ export const useImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
         imageMetadata: { ...imageUploadInfo, imageData },
       })
     },
-    [dispatch, imageUploadInfo]
+    [dispatch, imageUploadInfo],
   )
 
   return { state, onImageRenderCallback }
@@ -90,7 +86,7 @@ export const useImageAnalysis = (imageUploadInfo: ImageUploadInfo) => {
 
 export const imageAnalysisReducer = (
   _: ImageAnalysisState,
-  action: ImageAnalysisAction
+  action: ImageAnalysisAction,
 ): ImageAnalysisState => {
   switch (action.action) {
     case ImageAnalysisActions.ON_RENDER:
